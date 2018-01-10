@@ -1,10 +1,10 @@
 ---
-title: Computed Properties and Watchers
+title: Wartości wyliczone i obserwatorzy
 type: guide
 order: 5
 ---
 
-## Computed Properties
+## Wartości wyliczone
 
 In-template expressions are very convenient, but they are meant for simple operations. Putting too much logic in your templates can make them bloated and hard to maintain. For example:
 
