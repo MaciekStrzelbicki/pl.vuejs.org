@@ -4,13 +4,13 @@ type: guide
 order: 6
 ---
 
-Powszechnym zastosowaniem bindowania wartości jest manipulacja listy klas elementu i jego styli lokalnych (osadzonych w tagu HTML). Obydwie te rzeczy są atrybutami, więc możemy użyć `v-bind` by nimi zarządzać. Do tego, musimy utworzyć string będącego wartością tych atrybutów. Niestety, konkatenacja stringów bywa uciążliwa i łatwo jest przy niej popełnić błąd. Z tego powodu Vue oferuje ulepszenie związane z używaniem `v-bind` wraz z atrybutami `class` i `style`. Oprócz stringów, wyrażenia te mogą oddziaływać również na obiekty i tablice.
+Powszechnym zastosowaniem bindowania wartości jest manipulacja listą klas elementu oraz jego stylami lokalnymi (osadzonymi w tagu HTML). Jedno i drugie jest atrybutem, więc możemy użyć `v-bind` by nimi zarządzać. Do tego, musimy utworzyć string z wartością tych atrybutów. Niestety, konkatenacja stringów bywa uciążliwa i łatwo jest przy niej popełnić błąd. Z tego powodu Vue oferuje ulepszenie związane z używaniem `v-bind` wraz z atrybutami `class` i `style`. Oprócz stringów, wyrażenia te mogą oddziaływać również na obiekty i tablice.
 
 ## Bindowanie klas w HTML
 
 ### Składnia z użyciem obiektu
 
-Do `v-bind:class` możemy przekazać obiekt żeby dynamicznie przełączać klasy:
+Do `v-bind:class` możemy przekazać obiekt, pozwoli to na dynamicznie przełączanie klas:
 
 ``` html
 <div v-bind:class="{ active: isActive }"></div>
@@ -57,7 +57,7 @@ data: {
 }
 ```
 
-Kod przedstawiony niżej spowoduje renderowanie z takim samym rezultatem. Możemy bindować także [Wartości wyliczone](computed.html), który zwraca obiekt. Jest to powszechny i dobry wzorzec.
+Kod przedstawiony niżej spowoduje renderowanie z takim samym rezultatem. Możemy bindować także [Wartości wyliczone](computed.html), dzięki temu funkcja zwróci obiekt. Jest to powszechny i dobry wzorzec.
 
 ``` html
 <div v-bind:class="classObject"></div>
@@ -204,4 +204,4 @@ Od wersji 2.3.0 w zwyż możemy używać wielu wartości (prefixów) dla danej w
 <div v-bind:style="{ display: ['-webkit-box', '-ms-flexbox', 'flex'] }"></div>
 ```
 
-Powyższe wyrenderuje tylko jedną wartość, tą która jest wymagana przez przeglądarkę. Dla przykładu `disply: flex` zostanie wyrenderowane tylko w przeglądarkach, które nie wymagają żadnych prefixów do użycia `disply: flex`.
+Powyższe wyrenderuje tylko jedną wartość, tą która jest wymgana przez przeglądarkę. Dla przykładu `disply: flex` zostanie wyrenderowane tylko w przeglądarkach, które nie wymagają żadnych prefixów do użycia `disply: flex`.
