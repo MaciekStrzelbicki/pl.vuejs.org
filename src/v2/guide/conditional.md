@@ -140,7 +140,6 @@ To zachowanie nie zawsze jest pożądane, więc Vue oferuje nam możliwość pow
 </template>
 ```
 
-Now those inputs will be rendered from scratch each time you toggle. See for yourself:
 Teraz, powyższe inputy będą renderowane od nowa za każdym razem kiedy naciśniesz przycisk. Sprawdź sam.
 
 {% raw %}
