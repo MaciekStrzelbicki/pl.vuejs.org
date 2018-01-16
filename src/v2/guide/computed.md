@@ -6,7 +6,7 @@ order: 5
 
 ## Wartości wyliczone
 
-In-template expressions are very convenient, but they are meant for simple operations. Putting too much logic in your templates can make them bloated and hard to maintain. For example:
+Wyrażenia w szablonie są bardzo wygodne, ale nadają się jedynie do prostych operacji. Zbyt duża ilość logiki w szablonach sprawi, że się nadmiernie rozrosną i stana się trudne do zarządzania. Przyjrzyj się poniższemu przykładowi:
 
 ``` html
 <div id="example">
@@ -14,16 +14,16 @@ In-template expressions are very convenient, but they are meant for simple opera
 </div>
 ```
 
-At this point, the template is no longer simple and declarative. You have to look at it for a second before realizing that it displays `message` in reverse. The problem is made worse when you want to include the reversed message in your template more than once.
+Ten sablon nie jest już prosty ani dekalaratywny. Nie wystarczy rzut oka, aby zrozumieć, że powoduje wyświetlenie komunikatu  `message` w odwróconym szyku znaków. Problem narasta kiedy decydujesz się na załączenie odwróconego komunikatu więcej niż raz.
 
-That's why for any complex logic, you should use a **computed property**.
+Właśnie dlatego przy złożonej logice powinno się korzystać z **wartości wyliczonych**.
 
-### Basic Example
+### Prosty przykład
 
 ``` html
 <div id="example">
-  <p>Original message: "{{ message }}"</p>
-  <p>Computed reversed message: "{{ reversedMessage }}"</p>
+  <p>Oryginalny komunikat: "{{ message }}"</p>
+  <p>Wyliczony odwrócony komunikat: "{{ reversedMessage }}"</p>
 </div>
 ```
 
@@ -34,21 +34,21 @@ var vm = new Vue({
     message: 'Hello'
   },
   computed: {
-    // a computed getter
+    // wyliczony getter
     reversedMessage: function () {
-      // `this` points to the vm instance
+      // `this` wskazuje na instancję vm
       return this.message.split('').reverse().join('')
     }
   }
 })
 ```
 
-Result:
+Wynik:
 
 {% raw %}
 <div id="example" class="demo">
-  <p>Original message: "{{ message }}"</p>
-  <p>Computed reversed message: "{{ reversedMessage }}"</p>
+  <p>Oryginalny komunikat: "{{ message }}"</p>
+  <p>Wyliczony odwrócony komunikat: "{{ reversedMessage }}"</p>
 </div>
 <script>
 var vm = new Vue({
@@ -65,7 +65,7 @@ var vm = new Vue({
 </script>
 {% endraw %}
 
-Here we have declared a computed property `reversedMessage`. The function we provided will be used as the getter function for the property `vm.reversedMessage`:
+Zadeklarowaliśmy tu wyliczoną właściwość `reversedMessage`. Funkcja może być użyta jako gette dla właściwości `vm.reversedMessage`:
 
 ``` js
 console.log(vm.reversedMessage) // => 'olleH'
@@ -73,20 +73,19 @@ vm.message = 'Goodbye'
 console.log(vm.reversedMessage) // => 'eybdooG'
 ```
 
-You can open the console and play with the example vm yourself. The value of `vm.reversedMessage` is always dependent on the value of `vm.message`.
+Możesz otworzyć konsolę i pobawić się tym przykładem samodzielnie. Wartość `vm.reversedMessage` jest zawsze zależna od wartości `vm.message`.
+Możesz bindować dane to wyliczonych wartości w szablonach tak jak zwykłą właściwość. Vue jest świadome, że `vm.reversedMessage` jest zależne od `vm.message` więc zaktualizuje wszystki połączenia z `vm.reversedMessage` jeżeli `vm.message` się zmieni. Najlepsze w tym jest to, że własnie stworzyliśmy relację zależności deklaratywnie: wyliczona funkcja getter działa w sposób przewidywalny więc jest łatwiejsza do testowania i zrozumienia.
 
-You can data-bind to computed properties in templates just like a normal property. Vue is aware that `vm.reversedMessage` depends on `vm.message`, so it will update any bindings that depend on `vm.reversedMessage` when `vm.message` changes. And the best part is that we've created this dependency relationship declaratively: the computed getter function has no side effects, which makes it easier to test and understand.
+### Wyliczone cachowanie kontra metody
 
-### Computed Caching vs Methods
-
-You may have noticed we can achieve the same result by invoking a method in the expression:
+Jak pamiętasz osiągneliśmy taki sam rezultat definiując metodę i wywołując ją w wyrażeniu:
 
 ``` html
-<p>Reversed message: "{{ reverseMessage() }}"</p>
+<p>Odwrócony komunikat: "{{ reverseMessage() }}"</p>
 ```
 
 ``` js
-// in component
+// w komponencie
 methods: {
   reverseMessage: function () {
     return this.message.split('').reverse().join('')
@@ -94,9 +93,9 @@ methods: {
 }
 ```
 
-Instead of a computed property, we can define the same function as a method instead. For the end result, the two approaches are indeed exactly the same. However, the difference is that **computed properties are cached based on their dependencies.** A computed property will only re-evaluate when some of its dependencies have changed. This means as long as `message` has not changed, multiple access to the `reversedMessage` computed property will immediately return the previously computed result without having to run the function again.
+Zamiast wyliczonej własności, możesz zdefiniować taką samą funkcję jako metodę. Oba podejścia dają ten sam rezultat. Jednak jest pena różnica **własności wyliczone są cachowane bazując na ich zależnościach**. Własności wyliczone będą podlegać aktualizacji dopiero gdy ich zależności ulegną zmianie. To oznacza, że tak długo jak wiadomość `message` nie zmieni się, każde wywołanie `reversedMessage` zwróci natychmiast poprzednią wartość wyliczoną bez uruchamiania funkcji.
 
-This also means the following computed property will never update, because `Date.now()` is not a reactive dependency:
+To również oznacza, że poniższa własność wyliczona nigdy nie zostanie zaktualizowana, ponieważ `Date.now()` nie jest reaktywną zależnością:
 
 ``` js
 computed: {
@@ -106,144 +105,145 @@ computed: {
 }
 ```
 
-In comparison, a method invocation will **always** run the function whenever a re-render happens.
+Dla porównania, wywołanie metody **zawsze** uruchomi tę funkcję, gdy nastąpi ponowne renderowanie.
 
-Why do we need caching? Imagine we have an expensive computed property **A**, which requires looping through a huge Array and doing a lot of computations. Then we may have other computed properties that in turn depend on **A**. Without caching, we would be executing **A**’s getter many more times than necessary! In cases where you do not want caching, use a method instead.
+Do czego potrzebuję cachowania? Wyobraź sobie, skomplikowanie wyliczoną właściwość **A**, która wymaga wielu wyliczeń na wielu pętlach w tablicy. Mając inna właściwość zależną od **A**, bez cachowania wywołamy wyliczanie **A** dużo więcej razy niż to jest potrzebne! W przypadkach, nie wymagających cachowania, użyj metody.
 
-### Computed vs Watched Property
+### Wyliczone własności kontra obserowane własności
 
-Vue does provide a more generic way to observe and react to data changes on a Vue instance: **watch properties**. When you have some data that needs to change based on some other data, it is tempting to overuse `watch` - especially if you are coming from an AngularJS background. However, it is often a better idea to use a computed property rather than an imperative `watch` callback. Consider this example:
+Vue zapewnia bardziej generyczny sposób na obserwowanie i reagowania na zmiany danych w instancji Vue: **obserwowane własności**. Jeżeli masz dane, które muszą być modyfikowane bazując na zmianach innych danych kuszące jest nadużywanie `watch` - zwłaszcza jeżeli znasz Angulara. Jednak często lepszym rozwiązaniem jest uzycie wyliczonych własności zamiast wywołania zwrotnego `watch`. Spójrz na poniższy przykład:
 
 ``` html
-<div id="demo">{{ fullName }}</div>
+<div id="demo">{{ imieNazwisko }}</div>
 ```
 
 ``` js
 var vm = new Vue({
   el: '#demo',
   data: {
-    firstName: 'Foo',
-    lastName: 'Bar',
-    fullName: 'Foo Bar'
+    imie: 'Foo',
+    nazwisko: 'Bar',
+    imieNazwisko: 'Foo Bar'
   },
   watch: {
     firstName: function (val) {
-      this.fullName = val + ' ' + this.lastName
+      this.imieNazwisko = val + ' ' + this.nazwisko
     },
     lastName: function (val) {
-      this.fullName = this.firstName + ' ' + val
+      this.imieNazwisko = this.imie + ' ' + val
     }
   }
 })
 ```
 
-The above code is imperative and repetitive. Compare it with a computed property version:
+Powyży kod jest bardzo rozbudowany i mało elegancki w porównaniu do wersji wykorzystującej wyliczone właściwości:
 
 ``` js
 var vm = new Vue({
   el: '#demo',
   data: {
-    firstName: 'Foo',
-    lastName: 'Bar'
+    imie: 'Foo',
+    nazwisko: 'Bar'
   },
   computed: {
-    fullName: function () {
-      return this.firstName + ' ' + this.lastName
+    imieNazwisko: function () {
+      return this.imie + ' ' + this.nazwisko
     }
   }
 })
 ```
 
-Much better, isn't it?
+Duzo lepiej, nieprawdaż?
 
-### Computed Setter
+### Wyliczony setter
 
-Computed properties are by default getter-only, but you can also provide a setter when you need it:
+właściwości wyliczone domyslnie są uzywane jako getter, ale mozna ich używać jako setter, w razie potrzeby:
 
 ``` js
 // ...
 computed: {
-  fullName: {
+  imieNazwisko: {
     // getter
     get: function () {
-      return this.firstName + ' ' + this.lastName
+      return this.imie + ' ' + this.nazwisko
     },
     // setter
-    set: function (newValue) {
-      var names = newValue.split(' ')
-      this.firstName = names[0]
-      this.lastName = names[names.length - 1]
+    set: function (nowaWartosc) {
+      var osoba = nowaWartosc.split(' ')
+      this.imie = osoba[0]
+      this.nazwisko = osoba[osoba.length - 1]
     }
   }
 }
 // ...
 ```
 
-Now when you run `vm.fullName = 'John Doe'`, the setter will be invoked and `vm.firstName` and `vm.lastName` will be updated accordingly.
+Jezeli wydasz polecenie `vm.imieNazwisko = 'Jan Nowak'`, zostanie wywołany setter, który zaktualizuje `vm.imie` i `vm.nazwisko`.
 
-## Watchers
+## Obserwatorzy
 
-While computed properties are more appropriate in most cases, there are times when a custom watcher is necessary. That's why Vue provides a more generic way to react to data changes through the `watch` option. This is most useful when you want to perform asynchronous or expensive operations in response to changing data.
+W większości przypadków własności wyliczone są dobrym rozwiązaniem, jednak zdarzają się sytuacje wymagające użycia obserwatora. Własnie dlatego Vue zapewnia bardziej generyczną technikę reagowania na zmiany danych: opcję `watch`. Jesto najbardziej uzyteczne przy asynchronicznych lub wymagających operacjach wywoływanych zmianą danych.
 
-For example:
+np:
 
 ``` html
 <div id="watch-example">
   <p>
-    Ask a yes/no question:
-    <input v-model="question">
+    Zadaj pytanie zamknięte:
+    <input v-model="pytanie">
   </p>
-  <p>{{ answer }}</p>
+  <p>{{ odpowiedz }}</p>
 </div>
 ```
 
 ``` html
-<!-- Since there is already a rich ecosystem of ajax libraries    -->
-<!-- and collections of general-purpose utility methods, Vue core -->
-<!-- is able to remain small by not reinventing them. This also   -->
-<!-- gives you the freedom to use what you're familiar with. -->
+<!-- Dzisiaj jest do dyspozycji rozbudowany ekosystem bibliotek ajax -->
+<!-- i kolekcji użytecznych metod ogólnego zastosowania, rdzeń Vue -->
+<!-- jest w stanie wykorzystwać je, bez wynajdowania na nowo. Daje to  -->
+<!-- również deweloperom swobodę korzystania z narzędzi, które znają. -->
 <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
 <script>
-var watchExampleVM = new Vue({
+var przykladObserwatora = new Vue({
   el: '#watch-example',
   data: {
-    question: '',
-    answer: 'I cannot give you an answer until you ask a question!'
+    pytanie: '',
+    odpowiedz: 'Nie jestem w stanie odpowiedzieć, jeżeli nie zadasz pytania!'
   },
   watch: {
-    // whenever question changes, this function will run
-    question: function (newQuestion) {
-      this.answer = 'Waiting for you to stop typing...'
-      this.getAnswer()
+    // przy każdej zmianie pytania ta funkcja zostanie wywołana
+    pytanie: function (nowePytanie) {
+      this.odpowiedz = 'Czekam aż skończysz pisać...'
+      this.pobierzOdpowiedz()
     }
   },
   methods: {
-    // _.debounce is a function provided by lodash to limit how
-    // often a particularly expensive operation can be run.
-    // In this case, we want to limit how often we access
-    // yesno.wtf/api, waiting until the user has completely
-    // finished typing before making the ajax request. To learn
-    // more about the _.debounce function (and its cousin
-    // _.throttle), visit: https://lodash.com/docs#debounce
+    // _.debounce jest funkcją z biblioteki loadash, za jej pomocą
+    // można określić ile razy dana operacja może być wykonana.
+    // W tym przypadku chcemy ograniczyć liczbę odwołań do yesno.wtf/api,
+    // w oczekiwaniu na zakończenie wpisywania dancyh przez użytkownika
+    // przed wygenerowaniem żądania ajax. Aby się dowiedzieć więcej
+    // o metodzie _.debounce (i jej kuzynie _.throttle)
+    // odwiedź: https://lodash.com/docs#debounce
+
     getAnswer: _.debounce(
       function () {
-        if (this.question.indexOf('?') === -1) {
-          this.answer = 'Questions usually contain a question mark. ;-)'
+        if (this.pytanie.indexOf('?') === -1) {
+          this.odpowiedz = 'Pytania zazwyczaj kończą się pytajnikiem. ;-)'
           return
         }
-        this.answer = 'Thinking...'
+        this.odpowiedz = 'Myślę...'
         var vm = this
         axios.get('https://yesno.wtf/api')
           .then(function (response) {
-            vm.answer = _.capitalize(response.data.answer)
+            vm.odpowiedz = _.capitalize(response.data.odpowiedz)
           })
           .catch(function (error) {
-            vm.answer = 'Error! Could not reach the API. ' + error
+            vm.odpowiedz = 'Błąd! API niesotępne. ' + error
           })
       },
-      // This is the number of milliseconds we wait for the
-      // user to stop typing.
+      // To jest czas w którym czekamy na zakończenie wpisywania
+      // przez użytkownika, w milisekundach.
       500
     )
   }
@@ -256,43 +256,54 @@ Result:
 {% raw %}
 <div id="watch-example" class="demo">
   <p>
-    Ask a yes/no question:
+    Zadaj pytanie zamknięte:
     <input v-model="question">
   </p>
-  <p>{{ answer }}</p>
+  <p>{{ odpowiedz }}</p>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
 <script>
-var watchExampleVM = new Vue({
+var przykladObserwatora = new Vue({
   el: '#watch-example',
   data: {
-    question: '',
-    answer: 'I cannot give you an answer until you ask a question!'
+    pytanie: '',
+    odpowiedz: 'Nie jestem w stanie odpowiedzieć, jeżeli nie zadasz pytania!'
   },
   watch: {
-    question: function (newQuestion) {
-      this.answer = 'Waiting for you to stop typing...'
-      this.getAnswer()
+    // przy każdej zmianie pytania ta funkcja zostanie wywołana
+    pytanie: function (nowePytanie) {
+      this.odpowiedz = 'Czekam aż skończysz pisać...'
+      this.pobierzOdpowiedz()
     }
   },
   methods: {
+    // _.debounce jest funkcją z biblioteki loadash, za jej pomocą
+    // można określić ile razy dana operacja może być wykonana.
+    // W tym przypadku chcemy ograniczyć liczbę odwołań do yesno.wtf/api,
+    // w oczekiwaniu na zakończenie wpisywania dancyh przez użytkownika
+    // przed wygenerowaniem żądania ajax. Aby się dowiedzieć więcej
+    // o metodzie _.debounce (i jej kuzynie _.throttle)
+    // odwiedź: https://lodash.com/docs#debounce
+
     getAnswer: _.debounce(
       function () {
-        var vm = this
-        if (this.question.indexOf('?') === -1) {
-          vm.answer = 'Questions usually contain a question mark. ;-)'
+        if (this.pytanie.indexOf('?') === -1) {
+          this.odpowiedz = 'Pytania zazwyczaj kończą się pytajnikiem. ;-)'
           return
         }
-        vm.answer = 'Thinking...'
+        this.odpowiedz = 'Myślę...'
+        var vm = this
         axios.get('https://yesno.wtf/api')
           .then(function (response) {
-            vm.answer = _.capitalize(response.data.answer)
+            vm.odpowiedz = _.capitalize(response.data.odpowiedz)
           })
           .catch(function (error) {
-            vm.answer = 'Error! Could not reach the API. ' + error
+            vm.odpowiedz = 'Błąd! API niesotępne. ' + error
           })
       },
+      // To jest czas w którym czekamy na zakończenie wpisywania
+      // przez użytkownika, w milisekundach.
       500
     )
   }
@@ -300,6 +311,6 @@ var watchExampleVM = new Vue({
 </script>
 {% endraw %}
 
-In this case, using the `watch` option allows us to perform an asynchronous operation (accessing an API), limit how often we perform that operation, and set intermediary states until we get a final answer. None of that would be possible with a computed property.
+W powyższym przykładzie, wykorzystanie opcji `watch` wyzwala asynchroniczną operację (dostęp do API), ograniczając częstotliwość uruchomienia jej i ustawia stany pośrednie przed podaniem końcowej odpowiedzi. Zauważ, że jest to możliwe dzięki własnościom wyliczonym.
 
-In addition to the `watch` option, you can also use the imperative [vm.$watch API](../api/#vm-watch).
+Jako dodatek do opcji `watch` możesz wykorzystać [vm.$watch API](../api/#vm-watch).
