@@ -1,5 +1,5 @@
 ---
-title: Event Handling
+title: Zarządzanie zdarzeniami
 type: guide
 order: 9
 ---
