@@ -79,12 +79,12 @@ Dyrektywa `v-else-if` jak sugeruje jej nazwa jest dyrektywą pozwalającą doda�
 
 Podobnie jak `v-else`, `v-else-if` musi pojawiać się od razu za elementem posiadającym `v-if`, lub `v-else-if`.
 
-### Controlling Reusable Elements with `key`
+### Kontrolowanie wielokrotnego użycia elementów z użyciem `key`
 
-Vue stara się renderować elementy najwydajniej jak jest to możliwe, dlatego często używa ich ponownie zamiast renderować je od początku. Takie zachowanie oprócz pomagania Vue w szybszym działaniu, może nieść za sobą wiele korzyści. Na przykład, jeżeli chcemy umożliwić użytkownikowi przełączanie się między klikoma rodzajami logowania się.
+Vue stara się renderować elementy najwydajniej jak jest to możliwe, dlatego często używa ich ponownie zamiast renderować je od początku. Takie zachowanie oprócz przyspieszania działania aplikacji w Vue, może nieść za sobą wiele korzyści. Na przykład, jeżeli chcemy umożliwić użytkownikowi przełączanie się między klikoma rodzajami logowania się.
 
 ``` html
-<template v-if="loginType === 'username'">
+<template v-if="loginType === 'nazwaUzytkownika'">
   <label>Login</label>
   <input placeholder="Wprowadź swój login">
 </template>
@@ -101,26 +101,26 @@ Sprawdź to wpisując w pole input jakiś tekst i klikając przycisk.
 {% raw %}
 <div id="no-key-example" class="demo">
   <div>
-    <template v-if="loginType === 'username'">
-      <label>Username</label>
-      <input placeholder="Enter your username">
+    <template v-if="loginType === 'nazwaUzytkownika'">
+      <label>Nazwa użytkownika</label>
+      <input placeholder="Wpisz nazwę użytkownika">
     </template>
     <template v-else>
-      <label>Email</label>
-      <input placeholder="Enter your email address">
+      <label>E-mail</label>
+      <input placeholder="Wpisz adres e-mail">
     </template>
   </div>
-  <button @click="toggleLoginType">Toggle login type</button>
+  <button @click="toggleLoginType">Zmień sposób logowania</button>
 </div>
 <script>
 new Vue({
   el: '#no-key-example',
   data: {
-    loginType: 'username'
+    loginType: 'nazwaUzytkownika'
   },
   methods: {
     toggleLoginType: function () {
-      return this.loginType = this.loginType === 'username' ? 'email' : 'username'
+      return this.loginType = this.loginType === 'nazwaUzytkownika' ? 'email' : 'nazwaUzytkownika'
     }
   }
 })
@@ -130,7 +130,7 @@ new Vue({
 To zachowanie nie zawsze jest pożądane, więc Vue oferuje nam możliwość powiedzenia naszej aplikacji "Hej! te dwa elementy są zupełnie różne, nie używaj ich ponownie". Po prostu dodaj do nich atrybut `key` z unikalną dla każdego elementu wartością.
 
 ``` html
-<template v-if="loginType === 'username'">
+<template v-if="loginType === 'nazwaUzytkownika'">
   <label>Login</label>
   <input placeholder="Wprowadź swój login" key="login-input">
 </template>
@@ -146,26 +146,26 @@ Teraz, powyższe inputy będą renderowane od nowa za każdym razem kiedy naciś
 {% raw %}
 <div id="key-example" class="demo">
   <div>
-    <template v-if="loginType === 'username'">
-      <label>Username</label>
-      <input placeholder="Enter your username" key="username-input">
+    <template v-if="loginType === 'nazwaUzytkownika'">
+      <label>Nazwa użytkownika</label>
+      <input placeholder="Wpisz nazwę użytkownika" key="username-input">
     </template>
     <template v-else>
-      <label>Email</label>
-      <input placeholder="Enter your email address" key="email-input">
+      <label>E-mail</label>
+      <input placeholder="Wpisz adres e-mail" key="email-input">
     </template>
   </div>
-  <button @click="toggleLoginType">Toggle login type</button>
+  <button @click="toggleLoginType">Zmień nazwe logowania</button>
 </div>
 <script>
 new Vue({
   el: '#key-example',
   data: {
-    loginType: 'username'
+    loginType: 'nazwaUzytkownika'
   },
   methods: {
     toggleLoginType: function () {
-      return this.loginType = this.loginType === 'username' ? 'email' : 'username'
+      return this.loginType = this.loginType === 'nazwaUzytkownika' ? 'email' : 'nazwaUzytkownika'
     }
   }
 })
@@ -176,7 +176,7 @@ Zauważ, że tag `<label>` jest w dalszym ciąglu używany ponownie, ponieważ n
 
 ## `v-show`
 
-Inną metodą warunkowego wyświetlania elementów jest dyrektywa `v-show`. Sposób jej użycia jest w dużej mierze taki sam jak we wcześniejszej metodzie:
+Inną metodą warunkowego wyświetlania elementów jest dyrektywa `v-show`. Sposób jej użycia jest bardzo podobny do wcześniejszej metody:
 
 ``` html
 <h1 v-show="ok">Cześć!</h1>
@@ -190,13 +190,12 @@ Różnica polega na tym, że element z `v-show` będzie renderowany zawsze i poz
 
 `v-if` jest "prawdziwym" warunkowym renderowaniem, ponieważ zapewnia nam, że wszystkie detektory zdarzeń oraz komponenty, które są dziećmi warunkowego bloku są poprawnie usuwane i ponownie tworzone podczas przełączania stanu.  
 
-`v-if` jest również **leniwe**: nie stanie się nic, jeżeli warunek nie jest spełniony przy pierwszym renderowaniu  - blok warunkowy zostanie wyrenderowany dopiero kiedy warunek zostanie spełniony.
+`v-if` jest również **leniwe**: nie stanie się nic, jeżeli warunek nie jest spełniony przy pierwszym renderowaniu - blok warunkowy zostanie wyrenderowany dopiero kiedy warunek zostanie spełniony.
 
 Porównując te dwa sposoby, `v-show` jest znacznie mniej skomplikowane - element jest renderowany zawsze, niezależnie od początkowego warunku. Jego widoczność jest zmieniana poprzez przełączanie wartości w CSS.
 
-Generally speaking, `v-if` has higher toggle costs while `v-show` has higher initial render costs. So prefer `v-show` if you need to toggle something very often, and prefer `v-if` if the condition is unlikely to change at runtime.
-Generalnie `v-if`
+Generalnie `v-if` jest bardziej obciążający przy przełączaniu klas, natomiast `v-show` jest bardziej obciążający przy pierwszym renderowaniu. W związku z tym używaj `v-show` jeżeli potrzebujesz coś czesto przełączać, a `v-if` jeżeli warunek nie powinien się zbyt często zmieniać.
 
 ## `v-if` w połączeniu z `v-for`
 
-Używane z `v-if`, `v-for` ma wyższy priorytet niż `v-if`. Sprawdź <a href="../guide/list.html#V-for-and-v-if">przewodnik renderowania list</a>,by poznać więcej szczegółów.
+Korzystając z `v-if` razem z `v-for`, nalezy pamietać, że `v-for` ma wyższy priorytet niż `v-if`. Sprawdź <a href="../guide/list.html#V-for-and-v-if">przewodnik renderowania list</a>, aby poznać więcej szczegółów.
