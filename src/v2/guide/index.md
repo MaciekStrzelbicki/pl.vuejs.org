@@ -180,37 +180,37 @@ Aby dać użytkownikowi możliwość interakcji z aplikacją, możemy użyć dyr
 
 ``` html
 <div id="app-5">
-  <p>{{ wiadomosc }}</p>
-  <button v-on:click="reverseMessage">Odwróc wiadomość</button>
+  <p>{{ komunikat }}</p>
+  <button v-on:click="reverseMessage">Odwróć komunikat</button>
 </div>
 ```
 ``` js
 var app5 = new Vue({
   el: '#app-5',
   data: {
-    wiadomosc: 'Hello Vue.js!'
+    komunikat: 'Hello Vue.js!'
   },
   methods: {
     reverseMessage: function () {
-      this.message = this.message.split('').reverse().join('')
+      this.komunikat = this.komunikat.split('').reverse().join('')
     }
   }
 })
 ```
 {% raw %}
 <div id="app-5" class="demo">
-  <p>{{ wiadomosc }}</p>
-  <button v-on:click="reverseMessage">Odwróc wiadomość</button>
+  <p>{{ komunikat }}</p>
+  <button v-on:click="reverseMessage">Odwróc komunikat</button>
 </div>
 <script>
 var app5 = new Vue({
   el: '#app-5',
   data: {
-    wiadomosc: 'Hello Vue.js!'
+    komunikat: 'Hello Vue.js!'
   },
   methods: {
     reverseMessage: function () {
-      this.message = this.message.split('').reverse().join('')
+      this.komunikat = this.komunikat.split('').reverse().join('')
     }
   }
 })
@@ -223,28 +223,28 @@ Vue oferuje również dyrektywę `v-model`, która pozwala na dwukierunkowe bind
 
 ``` html
 <div id="app-6">
-  <p>{{ wiadomosc }}</p>
-  <input v-model="message">
+  <p>{{ komunikat }}</p>
+  <input v-model="komunikat">
 </div>
 ```
 ``` js
 var app6 = new Vue({
   el: '#app-6',
   data: {
-    wiadomosc: 'Hello Vue!'
+    komunikat: 'Hello Vue!'
   }
 })
 ```
 {% raw %}
 <div id="app-6" class="demo">
-  <p>{{ wiadomosc }}</p>
-  <input v-model="message">
+  <p>{{ komunikat }}</p>
+  <input v-model="komunikat">
 </div>
 <script>
 var app6 = new Vue({
   el: '#app-6',
   data: {
-    wiadomosc: 'Hello Vue!'
+    komunikat: 'Hello Vue!'
   }
 })
 </script>
