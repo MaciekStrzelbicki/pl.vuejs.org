@@ -212,7 +212,7 @@ var przykladObserwatora = new Vue({
   },
   watch: {
     // przy każdej zmianie pytania ta funkcja zostanie wywołana
-    pytanie: function (nowePytanie) {
+    pytanie: function (nowePytanie, starePytanie) {
       this.odpowiedz = 'Czekam aż skończysz pisać...'
       this.pobierzOdpowiedz()
     }
@@ -226,7 +226,7 @@ var przykladObserwatora = new Vue({
     // o metodzie _.debounce (i jej kuzynie _.throttle)
     // odwiedź: https://lodash.com/docs#debounce
 
-    getAnswer: _.debounce(
+    pobierzOdpowiedz: _.debounce(
       function () {
         if (this.pytanie.indexOf('?') === -1) {
           this.odpowiedz = 'Pytania zazwyczaj kończą się pytajnikiem. ;-)'
@@ -236,7 +236,7 @@ var przykladObserwatora = new Vue({
         var vm = this
         axios.get('https://yesno.wtf/api')
           .then(function (response) {
-            vm.odpowiedz = _.capitalize(response.data.odpowiedz)
+            vm.odpowiedz = _.capitalize(response.data.answer)
           })
           .catch(function (error) {
             vm.odpowiedz = 'Błąd! API niesotępne. ' + error
@@ -257,7 +257,7 @@ Result:
 <div id="watch-example" class="demo">
   <p>
     Zadaj pytanie zamknięte:
-    <input v-model="question">
+    <input v-model="pytanie">
   </p>
   <p>{{ odpowiedz }}</p>
 </div>
@@ -272,7 +272,7 @@ var przykladObserwatora = new Vue({
   },
   watch: {
     // przy każdej zmianie pytania ta funkcja zostanie wywołana
-    pytanie: function (nowePytanie) {
+    pytanie: function (nowePytanie, starePytanie) {
       this.odpowiedz = 'Czekam aż skończysz pisać...'
       this.pobierzOdpowiedz()
     }
@@ -286,7 +286,7 @@ var przykladObserwatora = new Vue({
     // o metodzie _.debounce (i jej kuzynie _.throttle)
     // odwiedź: https://lodash.com/docs#debounce
 
-    getAnswer: _.debounce(
+    pobierzOdpowiedz: _.debounce(
       function () {
         if (this.pytanie.indexOf('?') === -1) {
           this.odpowiedz = 'Pytania zazwyczaj kończą się pytajnikiem. ;-)'
@@ -296,7 +296,7 @@ var przykladObserwatora = new Vue({
         var vm = this
         axios.get('https://yesno.wtf/api')
           .then(function (response) {
-            vm.odpowiedz = _.capitalize(response.data.odpowiedz)
+            vm.odpowiedz = _.capitalize(response.data.answer)
           })
           .catch(function (error) {
             vm.odpowiedz = 'Błąd! API niesotępne. ' + error
