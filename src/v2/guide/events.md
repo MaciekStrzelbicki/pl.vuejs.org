@@ -4,54 +4,54 @@ type: guide
 order: 9
 ---
 
-## Listening to Events
+## Nasłuchiwanie zdarzeń
 
-We can use the `v-on` directive to listen to DOM events and run some JavaScript when they're triggered.
+Możemy uzyć dyrektywy `v-on` do nasłuchiwania zdarzeń w DOM oraz do uruchamiania JavaScriptu w odpowiedzi na nie.
 
-For example:
+Np:
 
 ``` html
 <div id="example-1">
-  <button v-on:click="counter += 1">Add 1</button>
-  <p>The button above has been clicked {{ counter }} times.</p>
+  <button v-on:click="licznik += 1">Dodaj 1</button>
+  <p>Przycisk został wciśnięty {{ licznik }} razy.</p>
 </div>
 ```
 ``` js
 var example1 = new Vue({
   el: '#example-1',
   data: {
-    counter: 0
+    licznik: 0
   }
 })
 ```
 
-Result:
+Wynik:
 
 {% raw %}
 <div id="example-1" class="demo">
-  <button v-on:click="counter += 1">Add 1</button>
-  <p>The button above has been clicked {{ counter }} times.</p>
+  <button v-on:click="licznik += 1">Dodaj 1</button>
+  <p>Przycisk został wciśnięty {{ licznik }} razy.</p>
 </div>
 <script>
 var example1 = new Vue({
   el: '#example-1',
   data: {
-    counter: 0
+    licznik: 0
   }
 })
 </script>
 {% endraw %}
 
-## Method Event Handlers
+## Metody do zarządzania zdarzeniami
 
-The logic for many event handlers will be more complex though, so keeping your JavaScript in the value of the `v-on` attribute isn't feasible. That's why `v-on` can also accept the name of a method you'd like to call.
+Logika wielu metod zarządzania zdarzeniami jest bardziej skomplikowana, więc utrzymanie JavaScript w wartości atrybutu `v-on` nie jest możliwe. Daltego `v-on` przyjmuje równiez nazwę funkcji, którą chcesz wywołać.
 
-For example:
+Np:
 
 ``` html
 <div id="example-2">
-  <!-- `greet` is the name of a method defined below -->
-  <button v-on:click="greet">Greet</button>
+  <!-- `powitanie` jest nazwą funkcji zdefiniowanej poniżej  -->
+  <button v-on:click="powitanie">Powitanie</button>
 </div>
 ```
 
@@ -61,12 +61,12 @@ var example2 = new Vue({
   data: {
     name: 'Vue.js'
   },
-  // define methods under the `methods` object
+  // definuj funkcje w obiekcie `methods`
   methods: {
-    greet: function (event) {
-      // `this` inside methods points to the Vue instance
+    powitanie: function (event) {
+      // `this` wewnątrz obiektu `methods` wskazuje na instancję Vue
       alert('Hello ' + this.name + '!')
-      // `event` is the native DOM event
+      // `event` jest natywnym zdarzeniem w DOM
       if (event) {
         alert(event.target.tagName)
       }
@@ -74,15 +74,16 @@ var example2 = new Vue({
   }
 })
 
-// you can invoke methods in JavaScript too
-example2.greet() // => 'Hello Vue.js!'
+// możesz również wywołać tą funkcję z JavaScript
+example2.powitanie() // => 'Hello Vue.js!'
 ```
 
-Result:
+Wynik:
 
 {% raw %}
 <div id="example-2" class="demo">
-  <button v-on:click="greet">Greet</button>
+  <!-- `powitanie` jest nazwą funkcji zdefiniowanej poniżej  -->
+  <button v-on:click="powitanie">Powitanie</button>
 </div>
 <script>
 var example2 = new Vue({
@@ -90,9 +91,12 @@ var example2 = new Vue({
   data: {
     name: 'Vue.js'
   },
+  // definuj funkcje w obiekcie `methods`
   methods: {
-    greet: function (event) {
+    powitanie: function (event) {
+      // `this` wewnątrz obiektu `methods` wskazuje na instancję Vue
       alert('Hello ' + this.name + '!')
+      // `event` jest natywnym zdarzeniem w DOM
       if (event) {
         alert(event.target.tagName)
       }
