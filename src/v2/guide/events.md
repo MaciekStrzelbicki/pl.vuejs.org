@@ -200,7 +200,7 @@ Aby zaadresować ten problem, Vue zapewnia **modyfikatory zdarzeń** dla `v-on`.
 
 <p class="tip">Kolejność użycia modyfikatorów jest istotna, ponieważ kod jest generowany w tej samej kolejności. Dlatego użycie `@click.prevent.self` blokuje **wszystkie kliknięcia**, a `@click.self.prevent` blokuje kliknięcia tylko z tego elementu.</p>
 
-> Nowość 2.1.4+
+> Nowość w 2.1.4+
 
 ``` html
 <!-- obsługa zdarzenia klik zostanie wykonana tylko raz -->
@@ -263,7 +263,7 @@ W powyższym przykładzie, obsługa zdarzenia zostanie wywołana jeżeli `$event
 
 ## Systemowe modyfikatory klawiatury
 
-> Nowość 2.1.0+
+> Nowość w 2.1.0+
 
 Możesz uzyć modyfikatorów do uruchomienia zdarzenia myszy lub klawiatury z wciśnietym klawiszem modyfikującym:
 
