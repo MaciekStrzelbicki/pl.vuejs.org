@@ -4,82 +4,83 @@ type: guide
 order: 11
 ---
 
-## What are Components?
+## Czym są komponenty?
 
-Components are one of the most powerful features of Vue. They help you extend basic HTML elements to encapsulate reusable code. At a high level, components are custom elements that Vue's compiler attaches behavior to. In some cases, they may also appear as a native HTML element extended with the special `is` attribute.
+Komponenty są jedną z najpotężniejszych cech Vue. Pozwalają na rozszeżenie podstawowego html i enkapsulacje go do ponownego uzycia. Na wysokim poziomie, komponenty są personalizowanymi elementami, do których kompilator Vue dodaje dynamikę. W niektórych przypadkach moga wystepować jako natywny HTML rozszeżony o atrybut `is`.
 
-All Vue components are also Vue instances, and so accept the same options object (except for a few root-specific options) and provide the same lifecycle hooks.
+Każdy komponent jest jednocześnie instancja Vue, więc przyjmuje taki sam obiekt z opcjami (poza kilkoma specjanymi opcjami) i oferuje takie same uchwyty cyli życia.
 
-## Using Components
+## Korzystanie z komponentów
 
-### Global Registration
+### Rejestracja globalna
 
-We've learned in the previous sections that we can create a new Vue instance with:
+W poprzednich sekcjach tworzyliśmy nowe instacje Vue za pomocą kodu:
 
 ``` js
 new Vue({
-  el: '#some-element',
-  // options
+  el: '#jakis-element',
+  // opcje
 })
 ```
 
-To register a global component, you can use `Vue.component(tagName, options)`. For example:
+Aby zrejestrować komponent globalnie, możesz użyć `Vue.component(tagName, options)`.
+Przykład:
 
 ``` js
-Vue.component('my-component', {
-  // options
+Vue.component('moj-komponent', {
+  // opcje
 })
 ```
 
-<p class="tip">Note that Vue does not enforce the [W3C rules](https://www.w3.org/TR/custom-elements/#concepts) for custom tag names (all-lowercase, must contain a hyphen) though following this convention is considered good practice.</p>
+<p class="tip">Zauważ, że Vue nie wymusza stosowania reguł [W3C](https://www.w3.org/TR/custom-elements/#concepts) dla nazw tagów użytkownika (wszytsko małymi literami, muszą zawierać myślnik) ale przestrzeganie tej konwencji jest dora praktyką.</p>
 
-Once registered, a component can be used in an instance's template as a custom element, `<my-component></my-component>`. Make sure the component is registered **before** you instantiate the root Vue instance. Here's the full example:
+Zarejestrownay komponent może być uzyty w szablonie instancji jako tag użytkownika `<moj-komponent></moj-komponent>`. Upewnij się, że komponent jest Zarejestrownay **przed** utworzeniem głównej instancji Vue. Poniżej przykład:
 
 ``` html
 <div id="example">
-  <my-component></my-component>
+  <moj-komponent></moj-komponent>
 </div>
 ```
 
 ``` js
-// register
-Vue.component('my-component', {
-  template: '<div>A custom component!</div>'
+// rejestracja
+Vue.component('moj-komponent', {
+  template: '<div>Komponent użytkownika!</div>'
 })
 
-// create a root instance
+// tworzenie głównej instacji
 new Vue({
   el: '#example'
 })
 ```
 
-Which will render:
+Wyrenderuje:
 
 ``` html
 <div id="example">
-  <div>A custom component!</div>
+  <div>Komponent użytkownika!</div>
 </div>
 ```
 
 {% raw %}
 <div id="example" class="demo">
-  <my-component></my-component>
+  <moj-komponent></moj-komponent>
 </div>
 <script>
-Vue.component('my-component', {
-  template: '<div>A custom component!</div>'
+Vue.component('moj-komponent', {
+  template: '<div>Komponent użytkownika!</div>'
 })
 new Vue({ el: '#example' })
 </script>
 {% endraw %}
 
-### Local Registration
+### Rejestracja lokalna
 
-You don't have to register every component globally. You can make a component available only in the scope of another instance/component by registering it with the `components` instance option:
+Nie musisz rejestrować każdego komponentu globalnie. Możesz utworzyć komponent dostępny tylko w zasięgu innej instancji/komponentu, rejestrując go opcją `components` w instancji:
 
 ``` js
-var Child = {
-  template: '<div>A custom component!</div>'
+var potomek = {
+  template: '<div>Komponent użytkownika!</div>'
 }
 
 new Vue({
