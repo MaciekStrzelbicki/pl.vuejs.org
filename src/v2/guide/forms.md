@@ -1,5 +1,5 @@
 ---
-title: Form Input Bindings
+title: Bindowanie inputów w formularzach
 type: guide
 order: 10
 ---
