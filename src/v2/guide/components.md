@@ -23,7 +23,7 @@ new Vue({
 })
 ```
 
-Aby zrejestrować komponent globalnie, możesz użyć `Vue.component(tagName, options)`.
+Aby zrejestrować komponent globalnie, użyj: `Vue.component(tagName, options)`.
 Przykład:
 
 ``` js
@@ -32,7 +32,7 @@ Vue.component('moj-komponent', {
 })
 ```
 
-<p class="tip">Zauważ, że Vue nie wymusza stosowania reguł [W3C](https://www.w3.org/TR/custom-elements/#concepts) dla nazw tagów użytkownika (wszytsko małymi literami, muszą zawierać myślnik) ale przestrzeganie tej konwencji jest dora praktyką.</p>
+<p class="tip">Zauważ, że Vue nie wymusza stosowania reguł [W3C](https://www.w3.org/TR/custom-elements/#concepts) dla nazw tagów użytkownika (wszytsko małymi literami, muszą zawierać dywiz) ale przestrzeganie tej konwencji jest dora praktyką.</p>
 
 Zarejestrownay komponent może być uzyty w szablonie instancji jako tag użytkownika `<moj-komponent></moj-komponent>`. Upewnij się, że komponent jest Zarejestrownay **przed** utworzeniem głównej instancji Vue. Poniżej przykład:
 
@@ -86,73 +86,73 @@ var potomek = {
 new Vue({
   // ...
   components: {
-    // <my-component> will only be available in parent's template
-    'my-component': Child
+    // <moj-komponent> będzie dostępny tylko w szablonie elementu nadrzędnego
+    'moj-komponent': Child
   }
 })
 ```
 
-The same encapsulation applies for other registerable Vue features, such as directives.
+Ta sama enkapsulacja dotyczy innych zarejestrowanych funkcjonalności Vue, takich jak dyrektywy.
 
-### DOM Template Parsing Caveats
+### Parsowanie szablonów DOM
 
-When using the DOM as your template (e.g. using the `el` option to mount an element with existing content), you will be subject to some restrictions that are inherent to how HTML works, because Vue can only retrieve the template content **after** the browser has parsed and normalized it. Most notably, some elements such as `<ul>`, `<ol>`, `<table>` and `<select>` have restrictions on what elements can appear inside them, and some elements such as `<option>` can only appear inside certain other elements.
+Korzystając z DOM jako szablonu (np: używając opcji `el` do osadzenia elementu z istniejącą zawartością), napotkasz pewne ograniczenia wynikające z działania HTMLa, ponieważ Vue może podbrać zawartość szablonu **po** parsowaniu i normalizacji przez przeglądarkę. Dzieje się tak dlatego, że elementy jak `<ul>`, `<ol>`, `<table>` i `<select>` mogą się pojawić jedynie wewątrz innych elementów.
 
-This will lead to issues when using custom components with elements that have such restrictions, for example:
-
-``` html
-<table>
-  <my-row>...</my-row>
-</table>
-```
-
-The custom component `<my-row>` will be hoisted out as invalid content, thus causing errors in the eventual rendered output. A workaround is to use the `is` special attribute:
+Doprowadzi to do problemów podczas używania niestandardowych komponentów z elementami, które mają takie ograniczenia, na przykład:
 
 ``` html
 <table>
-  <tr is="my-row"></tr>
+  <moj-row>...</moj-row>
 </table>
 ```
 
-**It should be noted that these limitations do not apply if you are using string templates from one of the following sources**:
+Komponent `<my-row>` zostanie potraktowany jako nieprawidłowa zawartość, to może generować błędy podczas renderowania. Obejściem jest zastosowanie atrybutu `is`:
+
+``` html
+<table>
+  <tr is="moj-row"></tr>
+</table>
+```
+
+**Te ograniczenia nie wystepują jeżeli wykorzystujesz szablony łańcuchowe z wymienionych źródeł:**
 
 - `<script type="text/x-template">`
-- JavaScript inline template strings
-- `.vue` components
+- szablon osadzony lokalnie jako łańcuch JavaScript
+- komponenty `.vue`
 
-Therefore, prefer using string templates whenever possible.
+W związku z tym należy korzystać z szablonów łancuchowych, zawsze kiedy to jest mozliwe.
 
-### `data` Must Be a Function
+### `data` musi być funkcją
 
-Most of the options that can be passed into the Vue constructor can be used in a component, with one special case: `data` must be a function. In fact, if you try this:
+Większość opcji zdefiniowana w konstruktorze Vue może być wykorzystana w komponencie, z jednym zastrzeżeniem: `data` musi być funkcją. Jeżeli użyjesz kod:
 
 ``` js
-Vue.component('my-component', {
-  template: '<span>{{ message }}</span>',
+Vue.component('moj-component', {
+  template: '<span>{{ komunikat }}</span>',
   data: {
-    message: 'hello'
+    komunikat: 'Cześć!'
   }
 })
 ```
 
-Then Vue will halt and emit warnings in the console, telling you that `data` must be a function for component instances. It's good to understand why the rules exist though, so let's cheat.
+Vue zatrzyma się i wyświetli w konsoli komunikat: `data` must be a function for component instances (dla instancji komponentu `data` musi byc funkcją). Żeby lepiej zrozumieć zasady spróbujmy nieco oszukać:
 
 ``` html
 <div id="example-2">
-  <simple-counter></simple-counter>
-  <simple-counter></simple-counter>
-  <simple-counter></simple-counter>
+  <prosty-licznik></prosty-licznik>
+  <prosty-licznik></prosty-licznik>
+  <prosty-licznik></prosty-licznik>
 </div>
 ```
 
 ``` js
-var data = { counter: 0 }
+var data = { licznik: 0 }
 
-Vue.component('simple-counter', {
-  template: '<button v-on:click="counter += 1">{{ counter }}</button>',
-  // data is technically a function, so Vue won't
-  // complain, but we return the same object
-  // reference for each component instance
+Vue.component('prosty-licznik', {
+  template: '<button v-on:click="licznik += 1">{{ licznik }}</button>',
+  // data technicznie jest funkcją, więc Vue
+  // nie wyświetli błędu i zwróci odwołanie do obiektu
+  // dla każdej instancji
   data: function () {
     return data
   }
@@ -165,14 +165,14 @@ new Vue({
 
 {% raw %}
 <div id="example-2" class="demo">
-  <simple-counter></simple-counter>
-  <simple-counter></simple-counter>
-  <simple-counter></simple-counter>
+  <prosty-licznik></prosty-licznik>
+  <prosty-licznik></prosty-licznik>
+  <prosty-licznik></prosty-licznik>
 </div>
 <script>
-var data = { counter: 0 }
-Vue.component('simple-counter', {
-  template: '<button v-on:click="counter += 1">{{ counter }}</button>',
+var data = { licznik: 0 }
+Vue.component('prosty-licznik', {
+  template: '<button v-on:click="licznik += 1">{{ licznik }}</button>',
   data: function () {
     return data
   }
@@ -183,30 +183,31 @@ new Vue({
 </script>
 {% endraw %}
 
-Since all three component instances share the same `data` object, incrementing one counter increments them all! Ouch. Let's fix this by instead returning a fresh data object:
+Jeżeli każda z instancji komponentu ma ten sam obiekt `data`, inkrementacja jednego licznika inkrementuje wszystkie!
+Since all three component instances share the same `data` object, incrementing one counter increments them all! Ouch. Naprawmy to, zwracając nowy obiekt `data`:
 
 ``` js
 data: function () {
   return {
-    counter: 0
+    licznik: 0
   }
 }
 ```
 
-Now all our counters each have their own internal state:
+Teraz każdy licznik będzie miał własny stan:
 
 {% raw %}
 <div id="example-2-5" class="demo">
-  <my-component></my-component>
-  <my-component></my-component>
-  <my-component></my-component>
+  <moj-komponent></moj-komponent>
+  <moj-komponent></moj-komponent>
+  <moj-komponent></moj-komponent>
 </div>
 <script>
-Vue.component('my-component', {
-  template: '<button v-on:click="counter += 1">{{ counter }}</button>',
+Vue.component('moj-komponent', {
+  template: '<button v-on:click="licznik += 1">{{ licznik }}</button>',
   data: function () {
     return {
-      counter: 0
+      licznik: 0
     }
   }
 })
@@ -216,141 +217,141 @@ new Vue({
 </script>
 {% endraw %}
 
-### Composing Components
+### Komponowanie komponentów
 
-Components are meant to be used together, most commonly in parent-child relationships: component A may use component B in its own template. They inevitably need to communicate to one another: the parent may need to pass data down to the child, and the child may need to inform the parent of something that happened in the child. However, it is also very important to keep the parent and the child as decoupled as possible via a clearly-defined interface. This ensures each component's code can be written and reasoned about in relative isolation, thus making them more maintainable and potentially easier to reuse.
+Komponenty powinny być używane razem, zwykle w relacji rodzic - dziecko: komponent A może użyć komponentu B w jego własnym szablonie. Nieunikniona jest komunikacja między nimi: rodzic może oczekiwać danych od dziecka, a dziecko może informować rodzica co się z nim dzieje. Bardzo ważne jest żeby zachować ich rozdzielność, jeżeli to możliwe z wyraźnie zdefiniowanym interfejsem. Daje to pewność, że każdy z komponentów może być napisany utrzymywany we względnej izolacji co sprawia, że będzie nimi łatwiej zarządzać i potencjalnie będą łatwiejsze do ponownego użycia.
 
-In Vue, the parent-child component relationship can be summarized as **props down, events up**. The parent passes data down to the child via **props**, and the child sends messages to the parent via **events**. Let's see how they work next.
+W Vue relacje komponentów rodzic-dziecko można podsumować jako: **props przekazywane w dół, zdarzenia emitowane w górę**. Rodzic przekazuje dane do dziecka za pomocą **props**, a dziecko wysyła wiadomości do rodzica za pomocą **zdarzeń**. Zobaczmy jak to funkcjonuje.
 
 <p style="text-align: center;">
   <img style="width: 300px;" src="/images/props-events.png" alt="props down, events up">
 </p>
 
-## Props
+## Właściwość props
 
-### Passing Data with Props
+### Przekazywanie danych przez właściwość props
 
-Every component instance has its own **isolated scope**. This means you cannot (and should not) directly reference parent data in a child component's template. Data can be passed down to child components using **props**.
+Każda instancja komponentu ma swój **izolowany zasięg**. To oznacza, że nie możesz (i nie powinieneś) odwoływać się bezpośrednio do danych rodzica w szablonie komponentu potomnego. Dane moga być przekazywane w dół do komponentu potomnego korzystając z **props**.
 
-A prop is a custom attribute for passing information from parent components. A child component needs to explicitly declare the props it expects to receive using the [`props` option](../api/#props):
+Właściwość jest atrybutem użytkownika do przekazywania informacji z nadrzędnego komponentu. Komponent musi mieć jawnie zadeklarowane właściwości, których oczekuje. Delaruje się je za pomocą opcji [`props`](../api/#props):
 
 ``` js
-Vue.component('child', {
-  // declare the props
-  props: ['message'],
-  // like data, the prop can be used inside templates and
-  // is also made available in the vm as this.message
-  template: '<span>{{ message }}</span>'
+Vue.component('dziecko', {
+  // deklaracja właściwości
+  props: ['komunikat'],
+  // tak jak 'data', 'props' może być uzyte wewnątrz szablonu
+  // i jest również dostępny w vm jako this.message
+  template: '<span>{{ komunikat }}</span>'
 })
 ```
 
-Then we can pass a plain string to it like so:
+Wtedy możemy przekazać zwykły ciąg znaków w ten sposób:
 
 ``` html
-<child message="hello!"></child>
+<dziecko komunikat="Cześć!"></dziecko>
 ```
 
 Result:
 
 {% raw %}
 <div id="prop-example-1" class="demo">
-  <child message="hello!"></child>
+  <dziecko komunikat="Cześć!"></dziecko>
 </div>
 <script>
 new Vue({
   el: '#prop-example-1',
   components: {
-    child: {
-      props: ['message'],
-      template: '<span>{{ message }}</span>'
+    dziecko: {
+      props: ['komunikat'],
+      template: '<span>{{ komunikat }}</span>'
     }
   }
 })
 </script>
 {% endraw %}
 
-### camelCase vs. kebab-case
+### camelCase kontra kebab-case
 
-HTML attributes are case-insensitive, so when using non-string templates, camelCased prop names need to use their kebab-case (hyphen-delimited) equivalents:
+Atrybuty HTML uwzględniają wielkość liter, więc korzystając z szablonów nie łańcuchowych pisownia nazw właściwości musi być konwertowana z camelCase na kebeb-case (rozdzielone dywizem):
 
 ``` js
-Vue.component('child', {
-  // camelCase in JavaScript
-  props: ['myMessage'],
-  template: '<span>{{ myMessage }}</span>'
+Vue.component('dziecko', {
+  // camelCase w JavaScript
+  props: ['mojKomunikat'],
+  template: '<span>{{ mojKomunikat }}</span>'
 })
 ```
 
 ``` html
-<!-- kebab-case in HTML -->
-<child my-message="hello!"></child>
+<!-- kebab-case w HTML -->
+<dziecko moj-komunikat="Cześć!"></dziecko>
 ```
 
-Again, if you're using string templates, then this limitation does not apply.
+Ponownie: te ograniczenia nie wystepują jeżeli wykorzystujesz szablony łańcuchowe.
 
-### Dynamic Props
+### Dynamiczna właściwość props
 
-Similar to binding a normal attribute to an expression, we can also use `v-bind` for dynamically binding props to data on the parent. Whenever the data is updated in the parent, it will also flow down to the child:
+Podobnie do bindowania normalnego atrybutu do wyrażenia, również możesz użyć `v-bind` do dynamicznego binowania właściwości do danych w rodzicu. Jeżeli dane zostaną zaktualizowane w rodzicu, zostaną równiez przekazane dziecku:
 
 ``` html
 <div>
-  <input v-model="parentMsg">
+  <input v-model="komunikatRodzica">
   <br>
-  <child v-bind:my-message="parentMsg"></child>
+  <dziecko v-bind:moj-komunikat="komunikatRodzica"></dziecko>
 </div>
 ```
 
-You can also use the shorthand syntax for `v-bind`:
+Możesz również korzystać z wersji skróconej `v-bind`:
 
 ``` html
-<child :my-message="parentMsg"></child>
+<dziecko :moj-komunikat="komunikatRodzica"></dziecko>
 ```
 
-Result:
+Wynik:
 
 {% raw %}
 <div id="demo-2" class="demo">
-  <input v-model="parentMsg">
+  <input v-model="komunikatRodzica">
   <br>
-  <child v-bind:my-message="parentMsg"></child>
+  <dziecko v-bind:moj-komunikat="komunikatRodzica"></dziecko>
 </div>
 <script>
 new Vue({
   el: '#demo-2',
   data: {
-    parentMsg: 'Message from parent'
+    komunikatRodzica: 'Komunikat od rodzica'
   },
   components: {
-    child: {
-      props: ['myMessage'],
-      template: '<span>{{myMessage}}</span>'
+    dziecko: {
+      props: ['mojKomunikat'],
+      template: '<span>{{mojKomunikat}}</span>'
     }
   }
 })
 </script>
 {% endraw %}
 
-If you want to pass all the properties in an object as props, you can use `v-bind` without an argument (`v-bind` instead of `v-bind:prop-name`). For example, given a `todo` object:
+Jeżeli chcesz przekazać wszystkie właściwości w obiekcie jako właściwość props, możesz uzyć `v-bind` bez argumentu (`v-bind` zamiast `v-bind:nazwa-wlasciwosci`). Na przykład obiekt `todo`:
 
 ``` js
 todo: {
-  text: 'Learn Vue',
-  isComplete: false
+  tekst: 'Learn Vue',
+  wykonane: false
 }
 ```
 
-Then:
+Wtedy:
 
 ``` html
 <todo-item v-bind="todo"></todo-item>
 ```
 
-Will be equivalent to:
+będzie ekwiwalentem:
 
 ``` html
 <todo-item
-  v-bind:text="todo.text"
-  v-bind:is-complete="todo.isComplete"
+  v-bind:tekst="todo.tekst"
+  v-bind:is-complete="todo.wykonane"
 ></todo-item>
 ```
 
