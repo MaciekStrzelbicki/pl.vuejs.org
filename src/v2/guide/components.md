@@ -233,7 +233,7 @@ W Vue relacje komponentów rodzic-dziecko można podsumować jako: **props przek
 
 Każda instancja komponentu ma swój **izolowany zasięg**. To oznacza, że nie możesz (i nie powinieneś) odwoływać się bezpośrednio do danych rodzica w szablonie komponentu potomnego. Dane moga być przekazywane w dół do komponentu potomnego korzystając z **props**.
 
-Właściwość jest atrybutem użytkownika do przekazywania informacji z nadrzędnego komponentu. Komponent musi mieć jawnie zadeklarowane właściwości, których oczekuje. Delaruje się je za pomocą opcji [`props`](../api/#props):
+Props jest atrybutem użytkownika do przekazywania informacji z nadrzędnego komponentu. Komponent musi mieć jawnie zadeklarowane właściwości, których oczekuje. Deklaruje się je za pomocą opcji [`props`](../api/#props):
 
 ``` js
 Vue.component('dziecko', {
@@ -355,37 +355,36 @@ będzie ekwiwalentem:
 ></todo-item>
 ```
 
-### Literal vs. Dynamic
+### Literał kontra zawartość dynamiczna
 
-A common mistake beginners tend to make is attempting to pass down a number using the literal syntax:
+Częstym błędem początkujących jest wstawianie cyfry w składnię literału:
 
 ``` html
-<!-- this passes down a plain string "1" -->
+<!-- ten prop jest łańcuchem znaków, nie liczbą -->
 <comp some-prop="1"></comp>
 ```
 
-However, since this is a literal prop, its value is passed down as a plain string `"1"` instead of an actual number. If we want to pass down an actual JavaScript number, we need to use `v-bind` so that its value is evaluated as a JavaScript expression:
+Ponieważ prop jest literałem, jego wartość jest przekazywana jako łańcuch znaków `"1"`. Jeżeli chcesz przekazać wartość liczbową, musisz skorzystać z `v-bind`. Wówczas zapis będzie wyglądać w następujący sposób:
 
 ``` html
-<!-- this passes down an actual number -->
+<!-- teraz przekażesz jest liczbę -->
 <comp v-bind:some-prop="1"></comp>
 ```
 
-### One-Way Data Flow
+### Jednokierunkowy przepływ danych
+Wszystkie prop tworzą **jednokierunkowe** powiązanie między własnością dziecka a rodzica: gdy właściwość nadrzędna zostanie zaktualizowana, zostanie przekazana dziecku, ale nie na odwrót. Zapobiega to przypadkowemu mutowaniu stanu komponentów rodzica, co mogłoby utrudnić zrozumienie przepływu danych w aplikacji.
 
-All props form a **one-way-down** binding between the child property and the parent one: when the parent property updates, it will flow down to the child, but not the other way around. This prevents child components from accidentally mutating the parent's state, which can make your app's data flow harder to understand.
+Ponadto za każdym razem, gdy składnik rodzic jest aktualizowany, wszystkie prop w elemencie podrzędnym zostaną odświeżone z najnowszą wartością. Oznacza to, że **nie** należy mutować prop wewnątrz elementu potomnego. Jeśli to zrobisz, Vue ostrzeże cię w konsoli.
 
-In addition, every time the parent component is updated, all props in the child component will be refreshed with the latest value. This means you should **not** attempt to mutate a prop inside a child component. If you do, Vue will warn you in the console.
+Zwykle występują dwie sytuacje, w których kusząca jest mutacja prop:
 
-There are usually two cases where it's tempting to mutate a prop:
+1. Prop jest używana do przekazania wartości początkowej; komponent potomny chce później użyć go jako wartość danych lokalnych.
 
-1. The prop is used to pass in an initial value; the child component wants to use it as a local data property afterwards.
+2. Prop przekazuje wartość wymagającą obróbki.
 
-2. The prop is passed in as a raw value that needs to be transformed.
+Właściwe rozwiązania w tych przypadkach to:
 
-The proper answer to these use cases are:
-
-1. Define a local data property that uses the prop's initial value as its initial value:
+1. Zdefiniuj lokalny prop, który wykorzystuje przekazaną wartość prop jako swoją wartość początkową:
 
   ``` js
   props: ['initialCounter'],
@@ -394,7 +393,7 @@ The proper answer to these use cases are:
   }
   ```
 
-2. Define a computed property that is computed from the prop's value:
+2. Zdefiniuj właściwośc wyliczoną, która podda obróbce przekazane dane:
 
   ``` js
   props: ['size'],
@@ -405,40 +404,41 @@ The proper answer to these use cases are:
   }
   ```
 
-<p class="tip">Note that objects and arrays in JavaScript are passed by reference, so if the prop is an array or object, mutating the object or array itself inside the child **will** affect parent state.</p>
+<p class="tip">Zauważ, że obiekty i tablice w JavaScript są przekazywane przez odniesienie, więc jeśli prop jest tablicą lub obiektem, mutacja obiektu lub tablicy wewnątrz dziecka **wpłynie** na stan rodzica.</p>
 
-### Prop Validation
+### Walidacja prop
 
-It is possible for a component to specify requirements for the props it is receiving. If a requirement is not met, Vue will emit warnings. This is especially useful when you are authoring a component that is intended to be used by others.
+Możliwe jest, że komponent określa wymagania dla prop, które otrzymuje. Jeśli wymaganie nie zostanie spełnione, Vue wyemituje ostrzeżenia. Jest to szczególnie przydatne podczas tworzenia komponentu, który ma być używany przez innych.
 
-Instead of defining the props as an array of strings, you can use an object with validation requirements:
+Zamiast definiować prop jako tablicę łańcuchów znaków, możesz użyć obiektu z wymaganiami walidacji:
 
 ``` js
 Vue.component('example', {
   props: {
-    // basic type check (`null` means accept any type)
+    // proste sprawdzenie typu 
+    // (`null` oznacza akceptację każdego typu)
     propA: Number,
-    // multiple possible types
+    // wiele dopuszczalnych typów
     propB: [String, Number],
-    // a required string
+    // wymagany łańcuch znaków
     propC: {
       type: String,
       required: true
     },
-    // a number with default value
+    // wartość liczbowa z wartością domyślną
     propD: {
       type: Number,
       default: 100
     },
-    // object/array defaults should be returned from a
-    // factory function
+    // wartości domyślne obiektu / tablicy 
+    // powinny być zwrócone przez funkcję wbudowaną
     propE: {
       type: Object,
       default: function () {
         return { message: 'hello' }
       }
     },
-    // custom validator function
+    // funkcja walidacyjna użytkownika
     propF: {
       validator: function (value) {
         return value > 10
@@ -448,7 +448,7 @@ Vue.component('example', {
 })
 ```
 
-The `type` can be one of the following native constructors:
+`type` może być jednym z natywnych konstruktorów:
 
 - String
 - Number
@@ -458,15 +458,15 @@ The `type` can be one of the following native constructors:
 - Array
 - Symbol
 
-In addition, `type` can also be a custom constructor function and the assertion will be made with an `instanceof` check.
+Ponadto, `typ` może być także niestandardową funkcją konstruktora, a asercja zostanie wykonana przy pomocy sprawdzenia` instanceof`.
 
-When prop validation fails, Vue will produce a console warning (if using the development build). Note that props are validated __before__ a component instance is created, so within `default` or `validator` functions, instance properties such as from `data`, `computed`, or `methods` will not be available.
+Gdy walidacja prop nie powiedzie się, Vue wygeneruje ostrzeżenie konsoli (jeśli używa się wersji deweloperskiej). Zauważ, że prop są sprawdzane __przed__ rozpoczęciem tworzenia instancji komponentu, więc w funkcjach `default` lub` validator` właściwości instancji takie jak `data`,` computed` lub `methods` nie będą dostępne.
 
-## Non-Prop Attributes
+## Atrybuty Non-Prop
 
-A non-prop attribute is an attribute that is passed to a component, but does not have a corresponding prop defined.
+Atrybuty non-prop są atrybutami przekazywanymi do komponentu, nie mające zdefiniowanego prop korespondującego z nimi.
 
-While explicitly defined props are preferred for passing information to a child component, authors of component libraries can't always foresee the contexts in which their components might be used. That's why components can accept arbitrary attributes, which are added to the component's root element.
+Chociaż jawnie zdefiniowane prop są preferowane do przekazywania informacji do komponentu potomnego, autorzy bibliotek komponentów nie zawsze mogą przewidzieć konteksty, w których mogą być używane ich komponenty. Dlatego komponenty mogą akceptować dowolne atrybuty, które są dodawane do elementu głównego komponentu.
 
 For example, imagine we're using a 3rd-party `bs-date-input` component with a Bootstrap plugin that requires a `data-3d-date-picker` attribute on the `input`. We can add this attribute to our component instance:
 
