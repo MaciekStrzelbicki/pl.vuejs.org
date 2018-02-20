@@ -458,9 +458,9 @@ Vue.component('example', {
 - Array
 - Symbol
 
-Ponadto, `typ` może być także niestandardową funkcją konstruktora, a asercja zostanie wykonana przy pomocy sprawdzenia` instanceof`.
+Ponadto, `typ` może być także niestandardową funkcją konstruktora, a asercja zostanie wykonana przy pomocy sprawdzenia `instanceof`.
 
-Gdy walidacja prop nie powiedzie się, Vue wygeneruje ostrzeżenie konsoli (jeśli używa się wersji deweloperskiej). Zauważ, że prop są sprawdzane __przed__ rozpoczęciem tworzenia instancji komponentu, więc w funkcjach `default` lub` validator` właściwości instancji takie jak `data`,` computed` lub `methods` nie będą dostępne.
+Gdy walidacja prop nie powiedzie się, Vue wygeneruje ostrzeżenie w konsoli (jeżeli korzystasz z deweloperskiej wersji biblioteki). Zauważ, że prop są sprawdzane __przed__ rozpoczęciem tworzenia instancji komponentu, więc w funkcjach `default` lub` validator` właściwości instancji takie jak `data`,`computed` lub `methods` nie będą dostępne.
 
 ## Atrybuty Non-Prop
 
@@ -468,23 +468,23 @@ Atrybuty non-prop są atrybutami przekazywanymi do komponentu, nie mające zdefi
 
 Chociaż jawnie zdefiniowane prop są preferowane do przekazywania informacji do komponentu potomnego, autorzy bibliotek komponentów nie zawsze mogą przewidzieć konteksty, w których mogą być używane ich komponenty. Dlatego komponenty mogą akceptować dowolne atrybuty, które są dodawane do elementu głównego komponentu.
 
-For example, imagine we're using a 3rd-party `bs-date-input` component with a Bootstrap plugin that requires a `data-3d-date-picker` attribute on the `input`. We can add this attribute to our component instance:
+Przykładowo wyobraź sobie, że korzystamy z komponentu `bs-date-input`. Jest gotowy komponent, z pluginem Bootstrap wymagający atrybutu `data-3d-date-picker` w `input`. Możemy dodać ten atrybut do instacji komponentu:
 
 ``` html
 <bs-date-input data-3d-date-picker="true"></bs-date-input>
 ```
 
-And the `data-3d-date-picker="true"` attribute will automatically be added to the root element of `bs-date-input`.
+Atrybut `data-3d-date-picker="true"` zostanie automatycznie dodany do głównego elementu `bs-date-input`.
 
-### Replacing/Merging with Existing Attributes
+### Zastępowanie / scalanie z istniejącymi atrybutami
 
-Imagine this is the template for `bs-date-input`:
+Tak by wyglądał szblon dla `bs-date-input`:
 
 ``` html
 <input type="date" class="form-control">
 ```
 
-To specify a theme for our date picker plugin, we might need to add a specific class, like this:
+Aby zdefiniować skórkę dla pluginu z wybierakiem daty, możemy dodać klasę:
 
 ``` html
 <bs-date-input
@@ -492,32 +492,31 @@ To specify a theme for our date picker plugin, we might need to add a specific c
   class="date-picker-theme-dark"
 ></bs-date-input>
 ```
+W tym przypadku otrzymamy dwie wartości `class`:
 
-In this case, two different values for `class` are defined:
+- `form-control`, ustawiona przez szablon komponentu,
+- `date-picker-theme-dark`, dodana do komponentu przez rodzica.
 
-- `form-control`, which is set by the component in its template
-- `date-picker-theme-dark`, which is passed to the component by its parent
+W przypadku większości atrybutów wartość dodana do komponentu zastąpi wartość ustawioną przez jego szablon. Na przykład przekazanie `type="large"` zastąpi `type ="date"` i prawdopodobnie go nadpisze! Na szczęście atrybuty `class` i `style` są trochę mądrzejsze, więc obie wartości są scalane, tworząc końcową wartość: `form-control date-picker-theme-dark`.
 
-For most attributes, the value provided to the component will replace the value set by the component. So for example, passing `type="large"` will replace `type="date"` and probably break it! Fortunately, the `class` and `style` attributes are a little smarter, so both values are merged, making the final value: `form-control date-picker-theme-dark`.
+## Zdarzenia użytkownika
 
-## Custom Events
+Dowiedzieliśmy się, że rodzic może przekazywać dane do dziecka za pomocą props, ale w jaki sposób przekazujemy informacje rodzicowi o zdarzeniach? Tutaj pojawia się system zdarzeń użytkownika Vue.
 
-We have learned that the parent can pass data down to the child using props, but how do we communicate back to the parent when something happens? This is where Vue's custom event system comes in.
+### Wykorzystanie `v-on` ze zdarzeniami użytkownika
 
-### Using `v-on` with Custom Events
+Każda instacja Vue implementuje [intefejs zdarzeń](../api/#Instance-Methods-Events), co oznacza, że każda instacja potrafi:
 
-Every Vue instance implements an [events interface](../api/#Instance-Methods-Events), which means it can:
+- Nasłuchiwać zdarzeń, korzystając z `$on(eventName)`
+- Emitować zdarzenia, korzystając z `$emit(eventName)`
 
-- Listen to an event using `$on(eventName)`
-- Trigger an event using `$emit(eventName)`
+<p class="tip">Zwróć uwagę, że system zdarzeń Vue różni się od [EventTarget API] przeglądarki (https://developer.mozilla.org/en-US/docs/Web/API/EventTarget). Chociaż działają one podobnie, `$on` i `$emit` __nie są__ skrótami `addEventListener` and `dispatchEvent`.</p>
 
-<p class="tip">Note that Vue's event system is different from the browser's [EventTarget API](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget). Though they work similarly, `$on` and `$emit` are __not__ aliases for `addEventListener` and `dispatchEvent`.</p>
+Ponadto komponent nadrzędny, może nasłuchiwać zdarzeń emitowanych przez dziecko. Wystarczy skorzystać z `v-on` bezpośrednio w szablonie gdzie jest wykorzystany komponent potomny.
 
-In addition, a parent component can listen to the events emitted from a child component using `v-on` directly in the template where the child component is used.
+<p class="tip">Nie możesz użyć `$on` do nasłuchiwania zdarzeń emitowanych przez dziecko. Musisz użyć `v-on` bezpośrednio w szablonie, jak w przykładzie poniżej.</p>
 
-<p class="tip">You cannot use `$on` to listen to events emitted by children. You must use `v-on` directly in the template, as in the example below.</p>
-
-Here's an example:
+Przykład:
 
 ``` html
 <div id="counter-event-example">
