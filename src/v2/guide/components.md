@@ -233,7 +233,6 @@ W Vue relacje komponentów rodzic-dziecko można podsumować jako: **props przek
 
 Każda instancja komponentu ma swój **izolowany zasięg**. To oznacza, że nie możesz (i nie powinieneś) odwoływać się bezpośrednio do danych rodzica w szablonie komponentu potomnego. Dane moga być przekazywane w dół do komponentu potomnego korzystając z **props**.
 
-Właściwość jest atrybutem użytkownika do przekazywania informacji z nadrzędnego komponentu. Komponent musi mieć jawnie zadeklarowane właściwości, których oczekuje. Delaruje się je za pomocą opcji [`props`](../api/#props):
 
 ``` js
 Vue.component('dziecko', {
@@ -492,6 +491,7 @@ Aby określiść skórkę dla wtyczki selektora daty, musimy dodać konkretną k
   class="date-picker-theme-dark"
 ></bs-date-input>
 ```
+W tym przypadku otrzymamy dwie wartości `class`:
 
 W tym przypadku zdefiniowaliśmy dwie klasy:
 
