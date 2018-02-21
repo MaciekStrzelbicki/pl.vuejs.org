@@ -335,7 +335,7 @@ Jeżeli chcesz przekazać wszystkie właściwości w obiekcie jako właściwoś�
 
 ``` js
 todo: {
-  tekst: 'Learn Vue',
+  tekst: 'Nauczyć się Vue',
   wykonane: false
 }
 ```
@@ -355,37 +355,37 @@ będzie ekwiwalentem:
 ></todo-item>
 ```
 
-### Literal vs. Dynamic
+### Literał a dynamika
 
-A common mistake beginners tend to make is attempting to pass down a number using the literal syntax:
-
-``` html
-<!-- this passes down a plain string "1" -->
-<comp some-prop="1"></comp>
-```
-
-However, since this is a literal prop, its value is passed down as a plain string `"1"` instead of an actual number. If we want to pass down an actual JavaScript number, we need to use `v-bind` so that its value is evaluated as a JavaScript expression:
+Czestym błędem początkujacych jest próba ustawienia wartości za pomoca składni literału:
 
 ``` html
-<!-- this passes down an actual number -->
-<comp v-bind:some-prop="1"></comp>
+<!-- ma ustawić właściwość na "1" -->
+<comp jakis-prop="1"></comp>
 ```
 
-### One-Way Data Flow
+Ponieważ jest to literał, przyjmuje warość '"1"' jako łańcuch znaków. Jeżeli chcemy przkazać liczbę, musimy skorzystać z `v-bind`. Kod powinien wyglądać nastepująco:
 
-All props form a **one-way-down** binding between the child property and the parent one: when the parent property updates, it will flow down to the child, but not the other way around. This prevents child components from accidentally mutating the parent's state, which can make your app's data flow harder to understand.
+``` html
+<!-- ustawia wartość liczbową 1 -->
+<comp v-bind:jakis-prop="1"></comp>
+```
 
-In addition, every time the parent component is updated, all props in the child component will be refreshed with the latest value. This means you should **not** attempt to mutate a prop inside a child component. If you do, Vue will warn you in the console.
+### Jednokierunkowy przeplyw dancyh
 
-There are usually two cases where it's tempting to mutate a prop:
+Wszystkie bindowanego właściwości props tworzą połączenie do **jednokierunkowego przekazywania w dół** pomiędzy dzieckiem, a rodzicem: gdy właściwość w rodzicu zostanie zaktualizowana, zostanie przekazana dziecku ale owrtonie już nie. To zapobiega przypadkowym zmianom stanów komponentów nadrzednych przez potomne, co by sprawiło, że kod aplikacji byłby trudny do zrozumienia.
 
-1. The prop is used to pass in an initial value; the child component wants to use it as a local data property afterwards.
+Pondato każdorazowa aktualizacja komponentu nadrzędnego powoduje odświerzenie wszystkich właściwości props elemendu podrzędnego, do ich ostatnich wartości. To oznacza, że **nie** powinieneś próbować zmieniać właściwości prop wewnątrz komponentu potomnego. Jeżeli to zrobisz Vue ostrzeże Cię komunikatem w konsoli.
 
-2. The prop is passed in as a raw value that needs to be transformed.
+Zwykle są dwa powody do zmiany:
 
-The proper answer to these use cases are:
+1. Prop jest używany do przekazania wartości początkowej; komponent potomny chce później użyć go jako właściwości danych lokalnych.
 
-1. Define a local data property that uses the prop's initial value as its initial value:
+2. Prop jest przekazywany jako surowa wartość, która musi zostać przekształcona.
+
+Własciwymi rozwiązaniami powyższych problemów są:
+
+1. Wartość początkową właściwości lokalnej zdefiniuj jako wartośc pobieraną z props:
 
   ``` js
   props: ['initialCounter'],
@@ -394,7 +394,8 @@ The proper answer to these use cases are:
   }
   ```
 
-2. Define a computed property that is computed from the prop's value:
+2. Zdefinuj właściwośc wyliczoną, tak aby była wyliczana z props:
+
 
   ``` js
   props: ['size'],
@@ -405,40 +406,39 @@ The proper answer to these use cases are:
   }
   ```
 
-<p class="tip">Note that objects and arrays in JavaScript are passed by reference, so if the prop is an array or object, mutating the object or array itself inside the child **will** affect parent state.</p>
+<p class="tip">Zauważ, że obiekty i tablice w JavaScript są przekazywane przez odniesienie, więc jeżeli prop jest tablicą lub obiektem, zmiana tego obiektu lub tablicy wewnątrz dziecka **zmieni** stan rodzica.</p>
 
-### Prop Validation
+### Walidacja prop
 
-It is possible for a component to specify requirements for the props it is receiving. If a requirement is not met, Vue will emit warnings. This is especially useful when you are authoring a component that is intended to be used by others.
+Jest mozliwość żeby komponent określał wymogi dla przyjmowanych props. Jeżeli nie zostaną spelnione Vue wyswietli ostrzeżenie. Jest to szczególnie przydatne przy pisaniu kompoentów mających być wykorzystywanych przez innych.
 
-Instead of defining the props as an array of strings, you can use an object with validation requirements:
+Zamiast definiować props w tablicy łańcuchów możesz użyć obiektu z walidacją oczekiwań:
 
 ``` js
 Vue.component('example', {
   props: {
-    // basic type check (`null` means accept any type)
+    // proste sprawdzenie typu danych (`null` oznacza akceptowanie każdego typu)
     propA: Number,
-    // multiple possible types
+    // wiele dopuszczalnych typów danych
     propB: [String, Number],
-    // a required string
+    // oczekuje łańcucha
     propC: {
       type: String,
       required: true
     },
-    // a number with default value
+    // wartość liczbowa z wartością domyślną
     propD: {
       type: Number,
       default: 100
     },
-    // object/array defaults should be returned from a
-    // factory function
+    // obiekt i tablica domyslnie powinny być zwracane przez funkcję
     propE: {
       type: Object,
       default: function () {
-        return { message: 'hello' }
+        return { komunikat: 'Cześć' }
       }
     },
-    // custom validator function
+    // personalizowana funkcja walidująca
     propF: {
       validator: function (value) {
         return value > 10
@@ -448,7 +448,7 @@ Vue.component('example', {
 })
 ```
 
-The `type` can be one of the following native constructors:
+"Typ" może być jednym z następujących natywnych konstruktorów:
 
 - String
 - Number
@@ -458,33 +458,33 @@ The `type` can be one of the following native constructors:
 - Array
 - Symbol
 
-In addition, `type` can also be a custom constructor function and the assertion will be made with an `instanceof` check.
+Ponadto, `type` może być funkcją konstruktora użytkownika a asercja zostanie wykonana przy pomocy sprawdzenia `instanceOf`.
 
-When prop validation fails, Vue will produce a console warning (if using the development build). Note that props are validated __before__ a component instance is created, so within `default` or `validator` functions, instance properties such as from `data`, `computed`, or `methods` will not be available.
+Jeżeli prop nie przejdzie walidacji Vue wyświetli ostrzeżenie w konsoli (jeżeli korzystarz z buildu deweloperskiego). Zauważ, że props są walidowane __przed__ utworzeniem instancji, więc w funkcjach `default` lub` validator` właściwości instancji takie jak `data`, `computed` lub `methods` nie będa dostępne.
 
-## Non-Prop Attributes
+## Atrybuty Non-Prop
 
-A non-prop attribute is an attribute that is passed to a component, but does not have a corresponding prop defined.
+Atrybut non-prop jest atrybutem przekazanym do komponentu nie mającym zdefiniowanego prop docelowego.
 
-While explicitly defined props are preferred for passing information to a child component, authors of component libraries can't always foresee the contexts in which their components might be used. That's why components can accept arbitrary attributes, which are added to the component's root element.
+Choć do przesyłania informacji komponentowi potomnemu dedykowane są zdefiniowane wcześniej właściwości props, autorzy bibliotek komponentów nie zawsze mogą przewidzieć konteksty, w których mogą być używane ich komponenty. Dlatego komponenty mogą akceptować dowolne atrybuty, które są dodawane do elementu głównego komponentu.
 
-For example, imagine we're using a 3rd-party `bs-date-input` component with a Bootstrap plugin that requires a `data-3d-date-picker` attribute on the `input`. We can add this attribute to our component instance:
+Wyobraź sobie sytuację, że używasz gotowego komponentu `bs-date-input` z wtyczką do bootstrapa, która oczekuje atrybutu `data-3d-date-picker` w `input`. Możemy dodać ten atrybut do naszej instancji komponentu:
 
 ``` html
 <bs-date-input data-3d-date-picker="true"></bs-date-input>
 ```
 
-And the `data-3d-date-picker="true"` attribute will automatically be added to the root element of `bs-date-input`.
+Atrybut `data-3d-date-picker="true"` zostanie automatycznie dodany do głównego elementu `bs-date-input`.
 
-### Replacing/Merging with Existing Attributes
+### Wymiana / Scalanie z istniejącymi atrybutami
 
-Imagine this is the template for `bs-date-input`:
+Wyobraź sobie taki kod w szablonie dla `bs-date-input`:
 
 ``` html
 <input type="date" class="form-control">
 ```
 
-To specify a theme for our date picker plugin, we might need to add a specific class, like this:
+Aby określiść skórkę dla wtyczki selektora daty, musimy dodać konkretną klasę:
 
 ``` html
 <bs-date-input
@@ -493,52 +493,52 @@ To specify a theme for our date picker plugin, we might need to add a specific c
 ></bs-date-input>
 ```
 
-In this case, two different values for `class` are defined:
+W tym przypadku zdefiniowaliśmy dwie klasy:
 
-- `form-control`, which is set by the component in its template
-- `date-picker-theme-dark`, which is passed to the component by its parent
+- `form-control`, jest ustawiony przez komponent w jego szablonie
+- `date-picker-theme-dark`, który jest przekazywany do komponentu przez jego rodzica
 
-For most attributes, the value provided to the component will replace the value set by the component. So for example, passing `type="large"` will replace `type="date"` and probably break it! Fortunately, the `class` and `style` attributes are a little smarter, so both values are merged, making the final value: `form-control date-picker-theme-dark`.
+W przypadku większości atrybutów wartość przekazana komponentowi zastąpi wartość ustawioną przez komponent. Przykładowo przekazanie komponentowi `type="large"` nadpisze `type="date"`. Na szczęście atrybuty `class` i `style` są nieco mądrzejsze i obie wartości zostana połączone, tworząc ostateczną wartość: `form-control date-picker-theme-dark`.
 
-## Custom Events
+## Zdarzenia niestandardowe
 
-We have learned that the parent can pass data down to the child using props, but how do we communicate back to the parent when something happens? This is where Vue's custom event system comes in.
+Przyzwyczaiłeś się zapewne do przekazywania props z rodzica do dziecka, a jak się skomunikować z rodzicem w razie potrzeby? To jest czas na poznanie systemu niestandardowych zdarzeń Vue.
 
-### Using `v-on` with Custom Events
+### Korzystanie z `v-on` przy zdarzeniach niestandardowych
 
-Every Vue instance implements an [events interface](../api/#Instance-Methods-Events), which means it can:
+Każda instancja Vue implementuje [interfejs zdarzeń](../api/#Instance-Methods-Events) co oznacza, że może:
 
-- Listen to an event using `$on(eventName)`
-- Trigger an event using `$emit(eventName)`
+- nasłuchiwać zdarzeń korzystając z: `$on(eventName)`
+- emitować zdarzenia korzystając z: `$emit(eventName)`
 
-<p class="tip">Note that Vue's event system is different from the browser's [EventTarget API](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget). Though they work similarly, `$on` and `$emit` are __not__ aliases for `addEventListener` and `dispatchEvent`.</p>
+<p class="tip">Zauważ, że system zdarzeń Vue różnie się od [EventTarget API](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget) przeglądarki. Chociaż działają podobnie, `$on` i `$emit` __nie__ są skrótami do `addEventListener` i `dispatchEvent`. </p>
 
-In addition, a parent component can listen to the events emitted from a child component using `v-on` directly in the template where the child component is used.
+Ponadto komponent nadrzędny może nasłuchiwać zdarzeń emitowanych z komponentu potomnego, używając `v-on` bezpośrednio w szablonie, w którym używany jest komponent potomny.
 
-<p class="tip">You cannot use `$on` to listen to events emitted by children. You must use `v-on` directly in the template, as in the example below.</p>
+<p class="tip">Nie możesz użyć `$on` do nasłuchiwania zdarzeń dziecka. Trzeba skorzystać z `v-on` bezpośrednio w szabloniejak na ponizszym przykladzie.</p>
 
-Here's an example:
+Przykład:
 
 ``` html
 <div id="counter-event-example">
-  <p>{{ total }}</p>
-  <button-counter v-on:increment="incrementTotal"></button-counter>
-  <button-counter v-on:increment="incrementTotal"></button-counter>
+  <p>{{ razem }}</p>
+  <button-counter v-on:inkrementuj="inkrementujRazem"></button-counter>
+  <button-counter v-on:inkrementuj="inkrementujRazem"></button-counter>
 </div>
 ```
 
 ``` js
 Vue.component('button-counter', {
-  template: '<button v-on:click="incrementCounter">{{ counter }}</button>',
+  template: '<button v-on:click="inkrementujLicznik">{{ licznik }}</button>',
   data: function () {
     return {
-      counter: 0
+      licznik: 0
     }
   },
   methods: {
-    incrementCounter: function () {
-      this.counter += 1
-      this.$emit('increment')
+    inkrementujLicznik: function () {
+      this.licznik += 1
+      this.$emit('inkrementuj')
     }
   },
 })
@@ -546,11 +546,11 @@ Vue.component('button-counter', {
 new Vue({
   el: '#counter-event-example',
   data: {
-    total: 0
+    razem: 0
   },
   methods: {
-    incrementTotal: function () {
-      this.total += 1
+    inkrementujRazem: function () {
+      this.razem += 1
     }
   }
 })
@@ -558,80 +558,81 @@ new Vue({
 
 {% raw %}
 <div id="counter-event-example" class="demo">
-  <p>{{ total }}</p>
-  <button-counter v-on:increment="incrementTotal"></button-counter>
-  <button-counter v-on:increment="incrementTotal"></button-counter>
+  <p>{{ razem }}</p>
+  <button-counter v-on:inkrementuj="inkrementujRazem"></button-counter>
+  <button-counter v-on:inkrementuj="inkrementujRazem"></button-counter>
 </div>
 <script>
 Vue.component('button-counter', {
-  template: '<button v-on:click="incrementCounter">{{ counter }}</button>',
+  template: '<button v-on:click="inkrementujLicznik">{{ licznik }}</button>',
   data: function () {
     return {
-      counter: 0
+      licznik: 0
     }
   },
   methods: {
-    incrementCounter: function () {
-      this.counter += 1
-      this.$emit('increment')
+    inkrementujLicznik: function () {
+      this.licznik += 1
+      this.$emit('inkrementuj')
     }
-  }
+  },
 })
 new Vue({
   el: '#counter-event-example',
   data: {
-    total: 0
+    razem: 0
   },
   methods: {
-    incrementTotal: function () {
-      this.total += 1
+    inkrementujRazem: function () {
+      this.razem += 1
     }
   }
 })
 </script>
 {% endraw %}
 
-In this example, it's important to note that the child component is still completely decoupled from what happens outside of it. All it does is report information about its own activity, just in case a parent component might care.
+Zwróc uwagę, że w tym przykladzie komponent potomny wciąż jest całkowicie odseparowany od tego co się dzieje na zewnątrz. Jego zadaniem jest przekazywanie informacji o swojej aktywności na wypadek, gdyby to mogło dotyczyć komponentu nadrzędnego.
 
-### Binding Native Events to Components
+### Bindowanie natywnych zdarzeń do komponentu
 
-There may be times when you want to listen for a native event on the root element of a component. In these cases, you can use the `.native` modifier for `v-on`. For example:
+Może się zdarzyć, że chcesz nasłuchiwać zdarzenia natywnego w głównym elemencie komponentu. W takich przypadkach możesz użyć modyfikatora `.native` dla` v-on`. Na przykład:
 
 ``` html
-<my-component v-on:click.native="doTheThing"></my-component>
+<my-component v-on:click.native="zrobTo"></my-component>
 ```
 
-### `.sync` Modifier
+### Modyfikator `.sync`
 
 > 2.3.0+
 
-In some cases we may need "two-way binding" for a prop - in fact, in Vue 1.x this is exactly what the `.sync` modifier provided. When a child component mutates a prop that has `.sync`, the value change will be reflected in the parent. This is convenient, however it leads to maintenance issues in the long run because it breaks the one-way data flow assumption: the code that mutates child props are implicitly affecting parent state.
+W niektórych przypadkach będziemy potrzebować "dwukierunkowego bindowania" dla prop, w Vue 1.x zajmował się tym modyfikator `.sync`. Jeżeli komponent potomny zmienił prop mający modyfikator `.sync`, zmiana wartości została odzwierciedlona w rodzicu. Jest to wygodne, jednak w dłuższej perspektywie prowadzi do problemów z utrzymaniem, ponieważ przerywa jednokierunkowe założenie przepływu danych: kod, który mutuje prop dziecka, pośrednio wpływa na stan rodzica.
 
-This is why we removed the `.sync` modifier when 2.0 was released. However, we've found that there are indeed cases where it could be useful, especially when shipping reusable components. What we need to change is **making the code in the child that affects parent state more consistent and explicit.**
+Właśnie z tego powodu modyfikator `.sync` wycofaliśmy od wersji 2.0. Odkryliśmy jednak, że rzeczywiście istnieją przypadki, w których może to być przydatne, szczególnie w przypadku budowania komponentów wielokrotnego użytku
+Zmiany wymagała **czytelność i spójność kodu dziecka, wpływającego na stan rodzica**.
 
-In 2.3.0+ we re-introduced the `.sync` modifier for props, but this time it is only syntax sugar that automatically expands into an additional `v-on` listener:
+W wersji 2.3.0+ przwrócilismy modyfikator `.sync` dla props, ale tym razem jako cukier składniowy, który roższerza detektor `v-on`:
 
-The following
+Poniższy kod:
 
 ``` html
 <comp :foo.sync="bar"></comp>
 ```
 
-is expanded into:
+ewoluował do:
 
 ``` html
 <comp :foo="bar" @update:foo="val => bar = val"></comp>
 ```
 
-For the child component to update `foo`'s value, it needs to explicitly emit an event instead of mutating the prop:
+Wystarczy, że komponent potomny zaktualizuje `foo`, zamiast zmieniać prop, wyemituje zdarzenie:
 
 ``` js
 this.$emit('update:foo', newValue)
 ```
 
-### Form Input Components using Custom Events
+### Komponenty inputów formularza korzystające z niestandardowych zdarzeń
 
-Custom events can also be used to create custom inputs that work with `v-model`. Remember:
+Niestandardowe zdarzenia moga być również użyte do tworzenia niestandardowych inputów współpracujących z `v-model`. Zapamietaj:
 
 ``` html
 <input v-model="something">
