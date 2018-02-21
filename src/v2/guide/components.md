@@ -233,6 +233,7 @@ W Vue relacje komponentów rodzic-dziecko można podsumować jako: **props przek
 
 Każda instancja komponentu ma swój **izolowany zasięg**. To oznacza, że nie możesz (i nie powinieneś) odwoływać się bezpośrednio do danych rodzica w szablonie komponentu potomnego. Dane moga być przekazywane w dół do komponentu potomnego korzystając z **props**.
 
+Props jest atrybutem użytkownika do przekazywania informacji z nadrzędnego komponentu. Komponent musi mieć jawnie zadeklarowane właściwości, których oczekuje. Deklaruje się je za pomocą opcji [`props`](../api/#props):
 
 ``` js
 Vue.component('dziecko', {
