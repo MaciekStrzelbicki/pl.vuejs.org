@@ -516,7 +516,7 @@ Każda instancja Vue implementuje [interfejs zdarzeń](../api/#Instance-Methods-
 
 Ponadto komponent nadrzędny może nasłuchiwać zdarzeń emitowanych z komponentu potomnego, używając `v-on` bezpośrednio w szablonie, w którym używany jest komponent potomny.
 
-<p class="tip">Nie możesz użyć `$on` do nasłuchiwania zdarzeń dziecka. Trzeba skorzystać z `v-on` bezpośrednio w szabloniejak na ponizszym przykladzie.</p>
+<p class="tip">Nie możesz użyć `$on` do nasłuchiwania zdarzeń dziecka. Trzeba skorzystać z `v-on` bezpośrednio w szablonie jak na ponizszym przykladzie.</p>
 
 Przykład:
 
@@ -636,32 +636,32 @@ this.$emit('update:foo', newValue)
 Niestandardowe zdarzenia moga być również użyte do tworzenia niestandardowych inputów współpracujących z `v-model`. Zapamietaj:
 
 ``` html
-<input v-model="something">
+<input v-model="costam">
 ```
 
-is syntactic sugar for:
+to cukier składniowy dla:
 
 ``` html
 <input
-  v-bind:value="something"
-  v-on:input="something = $event.target.value">
+  v-bind:value="costam"
+  v-on:input="costam = $event.target.value">
 ```
 
-When used with a component, it instead simplifies to:
+Zapis przy wykorzystaniu komponentu upraszcza się do:
 
 ``` html
 <custom-input
-  :value="something"
-  @input="value => { something = value }">
+  :value="costam"
+  @input="value => { costam = value }">
 </custom-input>
 ```
 
-So for a component to work with `v-model`, it should (these can be configured in 2.2.0+):
+A więc, aby komponent działał z `v-model`, powinien (konfiguracja dostępna od 2.2.0+):
 
-- accept a `value` prop
-- emit an `input` event with the new value
+- akceptować prop `value`,
+- emitować zdarzenie `input` z nową wartością.
 
-Let's see it in action with a simple currency input:
+Zobaczmy to w akcji przy inpucie do wprowadzenia ceny:
 
 ``` html
 <currency-input v-model="price"></currency-input>
@@ -680,26 +680,26 @@ Vue.component('currency-input', {
   ',
   props: ['value'],
   methods: {
-    // Instead of updating the value directly, this
-    // method is used to format and place constraints
-    // on the input's value
+    // Zamiast aktualizować wartość bezpośrednio, 
+    // ta metoda służy do formatowania i umieszczania
+    // reguł na wartości inputów
     updateValue: function (value) {
       var formattedValue = value
-        // Remove whitespace on either side
+        // Przycięcie pustych znaków po obu stronach
         .trim()
-        // Shorten to 2 decimal places
+        // Skrócenie do dwóch miejsc po przecinku
         .slice(
           0,
           value.indexOf('.') === -1
             ? value.length
             : value.indexOf('.') + 3
         )
-      // If the value was not already normalized,
-      // manually override it to conform
+      // Jeśli wartość nie była już znormalizowana,
+      // ręcznie ją nadpisz w celu dopasowania
       if (formattedValue !== value) {
         this.$refs.input.value = formattedValue
       }
-      // Emit the number value through the input event
+      // Emituj wartość liczbową za pomocą zdarzenia inputu
       this.$emit('input', Number(formattedValue))
     }
   }
@@ -747,15 +747,16 @@ new Vue({
 </script>
 {% endraw %}
 
-The implementation above is pretty naive though. For example, users are allowed to enter multiple periods and even letters sometimes - yuck! So for those that want to see a non-trivial example, here's a more robust currency filter:
+
+Powyższa implementacja jest jednak dość naiwna. Na przykład użytkownicy mogą czasem wpisywać wiele kropek, a nawet liter - fuj! Tak więc dla tych, którzy chcą zobaczyć nietrywialny przykład, oto bardziej solidny filtr walutowy:
 
 <iframe width="100%" height="300" src="https://jsfiddle.net/chrisvfritz/1oqjojjx/embedded/result,html,js" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 
 ### Customizing Component `v-model`
 
-> New in 2.2.0+
+> Nowe 2.2.0+
 
-By default, `v-model` on a component uses `value` as the prop and `input` as the event, but some input types such as checkboxes and radio buttons may want to use the `value` prop for a different purpose. Using the `model` option can avoid the conflict in such cases:
+Domyślnie `v-model` w komponencie używa `value` jako prop i `input` jako zdarzenia, ale niektóre typy inputów, takie jak checkbox i radio buttony, mogą chcieć użyć prop `value` do innego celu. Użycie opcji `model` pozwala uniknąć konfliktu w takich przypadkach:
 
 ``` js
 Vue.component('my-checkbox', {
@@ -765,7 +766,7 @@ Vue.component('my-checkbox', {
   },
   props: {
     checked: Boolean,
-    // this allows using the `value` prop for a different purpose
+    // to pozwala użyć `value` prop do innych celów
     value: String
   },
   // ...
@@ -773,20 +774,19 @@ Vue.component('my-checkbox', {
 ```
 
 ``` html
-<my-checkbox v-model="foo" value="some value"></my-checkbox>
+<my-checkbox v-model="foo" value="jakaś wartość"></my-checkbox>
 ```
 
-The above will be equivalent to:
+Powyższe będzie równoznaczne z:
 
 ``` html
 <my-checkbox
   :checked="foo"
   @change="val => { foo = val }"
-  value="some value">
+  value="jakaś wartość">
 </my-checkbox>
 ```
-
-<p class="tip">Note that you still have to declare the `checked` prop explicitly.</p>
+<p class="tip">Zauważ, że musisz nadal wyraźnie zadeklarować prop `checked`.</p>
 
 ### Non Parent-Child Communication
 
