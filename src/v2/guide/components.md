@@ -788,29 +788,29 @@ Powyższe będzie równoznaczne z:
 ```
 <p class="tip">Zauważ, że musisz nadal wyraźnie zadeklarować prop `checked`.</p>
 
-### Non Parent-Child Communication
+### Komunikacja poza relacjami rodzic-dziecko
 
-Sometimes two components may need to communicate with one-another but they are not parent/child to each other. In simple scenarios, you can use an empty Vue instance as a central event bus:
+Czasami dwa komponenty potrzebują się skomunikować, ale nie są w wzajemnej relacji rodzic-dziecko. Najprostszym rozwiązaniem jest wykorzystanie pustej instacji Vue jako centralna magistrala zdarzeń:  
 
 ``` js
 var bus = new Vue()
 ```
 ``` js
-// in component A's method
+// metoda w komponencie A
 bus.$emit('id-selected', 1)
 ```
 ``` js
-// in component B's created hook
+// uchwyt w komponencie B
 bus.$on('id-selected', function (id) {
   // ...
 })
 ```
 
-In more complex cases, you should consider employing a dedicated [state-management pattern](state-management.html).
+W bardziej skomplikowanych przypadkach, należy rozważyć użycie dedykowanego [szablon zarządzania zdarzeniami](state-management.html).
 
-## Content Distribution with Slots
+## Dystrybucja zawartości za pomocą slotów
 
-When using components, it is often desired to compose them like this:
+Pracując z komponentami, często układa się je w taki sposób:
 
 ``` html
 <app>
@@ -819,38 +819,38 @@ When using components, it is often desired to compose them like this:
 </app>
 ```
 
-There are two things to note here:
+Zwróc uwagę na dwa aspekty:
 
-1. The `<app>` component does not know what content it will receive. It is decided by the component using `<app>`.
+1. Komponent `<app>` nie wie jaką treść otrzyma. Decyduje o tym komponent korzystający z `<app>`.
 
-2. The `<app>` component very likely has its own template.
+2. Komponent `<app>` bardzo często ma własny szablon.
 
-To make the composition work, we need a way to interweave the parent "content" and the component's own template. This is a process called **content distribution** (or "transclusion" if you are familiar with Angular). Vue.js implements a content distribution API that is modeled after the current [Web Components spec draft](https://github.com/w3c/webcomponents/blob/gh-pages/proposals/Slots-Proposal.md), using the special `<slot>` element to serve as distribution outlets for the original content.
+Aby kompozycja działała, potrzebujemy sposobu na przeplatanie nadrzędnej "treści" i własnego szablonu komponentu. Jest to proces o nazwie **content distribution** (lub "transclusion", jeśli znasz Angular). Vue.js implementuje interfejs API do dystrybucji treści, który jest wzorowany na aktualnym projekcie specyfikacji [Web Components] (https://github.com/w3c/webcomponents/blob/gh-pages/proposals/Slots-Proposal.md), wykorzystujący specjalny element `<slot>" służący jako punkty dystrybucyjne dla oryginalnej treści.
 
-### Compilation Scope
+### Zasięg kompilacji
 
-Before we dig into the API, let's first clarify which scope the contents are compiled in. Imagine a template like this:
+Zanim przejdziemy do API, najpierw wyjaśnijmy, w jakim zakresie kompiluje się zawartość. Wyobraź sobie szablon podobny do tego:
 
 ``` html
 <child-component>
-  {{ message }}
+  {{ komunikat }}
 </child-component>
 ```
 
-Should the `message` be bound to the parent's data or the child data? The answer is the parent. A simple rule of thumb for component scope is:
+Czy `komunikat` powinien być powiązany z danymi rodzica czy dziecka? Odpowiedź brzmi: rodzica. Prostą zasadą ilustrującą zasięg komponentu jest:
 
-> Everything in the parent template is compiled in parent scope; everything in the child template is compiled in child scope.
+> Wszystko w szablonie rodzica jest kompilowane w zakresie rodzica; wszystko w szablonie dziecka jest kompilowane w zasięgu dziecka.
 
-A common mistake is trying to bind a directive to a child property/method in the parent template:
+Typowym błędem jest próba powiązania dyrektywy z właściwością / metodą dziecka w szablonie rodzica:
 
 ``` html
-<!-- does NOT work -->
+<!-- NIE zadziała -->
 <child-component v-show="someChildProperty"></child-component>
 ```
 
-Assuming `someChildProperty` is a property on the child component, the example above would not work. The parent's template is not aware of the state of a child component.
+Zakładając, że `someChildProperty` jest właściwością komponentu potomnego, powyższy przykład nie zadziała. Szablon rodzica nie jest świadomy stanu komponentu potomnego.
 
-If you need to bind child-scope directives on a component root node, you should do so in the child component's own template:
+Jeśli chcesz powiązać dyrektywy z zasięgu dziecka z węzłem głównym komponentu, powinieneś to zrobić w szablonie komponentu dziecka:
 
 ``` js
 Vue.component('child-component', {
@@ -864,47 +864,47 @@ Vue.component('child-component', {
 })
 ```
 
-Similarly, distributed content will be compiled in the parent scope.
+Podobnie, dystrybuowana zawartość zostanie skompilowana w zasięgu rodzica.
 
-### Single Slot
+### Pojedyńczy slot
 
-Parent content will be **discarded** unless the child component template contains at least one `<slot>` outlet. When there is only one slot with no attributes, the entire content fragment will be inserted at its position in the DOM, replacing the slot itself.
+Treść nadrzędna zostanie **odrzucona**, chyba że szablon komponentu potomnego zawiera co najmniej jedno gniazdo `<slot>`. Gdy jest tylko jedno gniazdo bez atrybutów, cały fragment treści zostanie wstawiony na swoje miejsce w DOM, zastępując sam slot.
 
-Anything originally inside the `<slot>` tags is considered **fallback content**. Fallback content is compiled in the child scope and will only be displayed if the hosting element is empty and has no content to be inserted.
+Wszystko, co pierwotnie znajdowało się w tagach `<slot>`, jest uważane za **treść zastępczą**. Treść zastępcza jest kompilowana w zasięgu dziecka i będzie wyświetlana tylko wtedy, gdy element gospodarza jest pusty i nie ma w nim treści do wstawienia.
 
-Suppose we have a component called `my-component` with the following template:
+Załóżmy, że mamy komponent `my-component` z poniższym szablonem:
 
 ``` html
 <div>
-  <h2>I'm the child title</h2>
+  <h2>Tytuł dziecka</h2>
   <slot>
-    This will only be displayed if there is no content
-    to be distributed.
+    To zostanie wyświetlone wyłącznie, gdy żadna zawartość
+    nie jest dystrybuowana.
   </slot>
 </div>
 ```
 
-And a parent that uses the component:
+I rodzica korzystającego z komponentu:
 
 ``` html
 <div>
-  <h1>I'm the parent title</h1>
+  <h1>Tytuł rodzica</h1>
   <my-component>
-    <p>This is some original content</p>
-    <p>This is some more original content</p>
+    <p>Oryginalna zawartość</p>
+    <p>Więcej oryginalnej zawartości</p>
   </my-component>
 </div>
 ```
 
-The rendered result will be:
+Wyrenderowany kod będzie wyglądał nastepująco:
 
 ``` html
 <div>
-  <h1>I'm the parent title</h1>
+  <h1>Tytuł rodzica</h1>
   <div>
-    <h2>I'm the child title</h2>
-    <p>This is some original content</p>
-    <p>This is some more original content</p>
+    <h2>Tytuł dziecka</h2>
+    <p>Oryginalna zawartość</p>
+    <p>Więcej oryginalnej zawartości</p>
   </div>
 </div>
 ```
