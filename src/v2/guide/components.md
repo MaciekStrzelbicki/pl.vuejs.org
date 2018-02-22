@@ -868,7 +868,7 @@ Podobnie, dystrybuowana zawartość zostanie skompilowana w zasięgu rodzica.
 
 ### Pojedyńczy slot
 
-Treść nadrzędna zostanie **odrzucona**, chyba że szablon komponentu potomnego zawiera co najmniej jedno gniazdo `<slot>`. Gdy jest tylko jedno gniazdo bez atrybutów, cały fragment treści zostanie wstawiony na swoje miejsce w DOM, zastępując sam slot.
+Treść nadrzędna zostanie **odrzucona**, chyba że szablon komponentu potomnego zawiera co najmniej jeden element `<slot>`. Gdy jest tylko jeden taki element bez atrybutów, cały fragment treści zostanie wstawiony na swoje miejsce w DOM, zastępując sam slot.
 
 Wszystko, co pierwotnie znajdowało się w tagach `<slot>`, jest uważane za **treść zastępczą**. Treść zastępcza jest kompilowana w zasięgu dziecka i będzie wyświetlana tylko wtedy, gdy element gospodarza jest pusty i nie ma w nim treści do wstawienia.
 
@@ -909,13 +909,13 @@ Wyrenderowany kod będzie wyglądał nastepująco:
 </div>
 ```
 
-### Named Slots
+### Nazwy slotów
 
-`<slot>` elements have a special attribute, `name`, which can be used to further customize how content should be distributed. You can have multiple slots with different names. A named slot will match any element that has a corresponding `slot` attribute in the content fragment.
+Elementy `<slot>` mają specjalny atrybut, `name`, który można wykorzystać do dalszego dostosowywania sposobu dystrybucji treści. Możesz mieć wiele slotów o różnych nazwach. Nazwany slot będzie pasować do dowolnego elementu, który ma odpowiedni atrybut `slot` w fragmencie treści.
 
-There can still be one unnamed slot, which is the **default slot** that serves as a catch-all outlet for any unmatched content. If there is no default slot, unmatched content will be discarded.
+Nadal może istnieć jeden nienazwany slot, który jest **domyślnym slotem**, służącym jako punkt wyjścia dla wszystkich niedopasowanych treści. Jeśli nie ma domyślnego slotu, niedopasowane treści zostaną odrzucone.
 
-For example, suppose we have an `app-layout` component with the following template:
+Wyobraź sobie, że mamy komponent `app-layout` z następującym szablonem:
 
 ``` html
 <div class="container">
@@ -931,83 +931,83 @@ For example, suppose we have an `app-layout` component with the following templa
 </div>
 ```
 
-Parent markup:
+Składnia rodzica:
 
 ``` html
 <app-layout>
-  <h1 slot="header">Here might be a page title</h1>
+  <h1 slot="header">Tutaj może być tytuł strony</h1>
 
-  <p>A paragraph for the main content.</p>
-  <p>And another one.</p>
+  <p>Akapit w głównej zawartości.</p>
+  <p>I jeszcze jeden.</p>
 
-  <p slot="footer">Here's some contact info</p>
+  <p slot="footer">Dane kontaktowe</p>
 </app-layout>
 ```
 
-The rendered result will be:
+Wyrenderowany kod:
 
 ``` html
 <div class="container">
   <header>
-    <h1>Here might be a page title</h1>
+    <h1>Tutaj może być tytuł strony</h1>
   </header>
   <main>
-    <p>A paragraph for the main content.</p>
-    <p>And another one.</p>
+    <p>Akapit w głównej zawartości.</p>
+    <p>I jeszcze jeden.</p>
   </main>
   <footer>
-    <p>Here's some contact info</p>
+    <p>Dane kontaktowe</p>
   </footer>
 </div>
 ```
 
-The content distribution API is a very useful mechanism when designing components that are meant to be composed together.
+Interfejs API do dystrybucji treści jest bardzo przydatnym mechanizmem podczas projektowania komponentów, które mają być komponowane razem.
 
-### Scoped Slots
+### Slot o ograniczonym zasięgu
 
-> New in 2.1.0+
+> Nowość w 2.1.0+
 
-A scoped slot is a special type of slot that functions as a reusable template (that can be passed data to) instead of already-rendered-elements.
+Slot o ograniczonym zasięgu jest specjalnym rodzajem slotu, który działa jako szablon wielokrotnego użytku (do którego można przekazywać dane) zamiast już wyrenderowanych elementów.
 
-In a child component, pass data into a slot as if you are passing props to a component:
+W komponencie potomnym, przekaż dane do slotu tak, jakbyś przekazywał prop do komponentu:
 
 ``` html
-<div class="child">
-  <slot text="hello from child"></slot>
+<div class="dziecko">
+  <slot text="dziecko wita się"></slot>
 </div>
 ```
 
-In the parent, a `<template>` element with a special attribute `slot-scope` must exist, indicating that it is a template for a scoped slot. The value of `slot-scope` will be used as the name of a temporary variable that holds the props object passed from the child:
+Jeżeli w elemencie nadrzędnym jest element `<template>` ze specjalnym atrybutem `slot-scope`, to oznacza, że jest to szablon dla slotu o ograniczonym zasięgu. Wartość `slot-scope` jest używana jako nazwa zmiennej tymczasowej, która przechowuje obiekt prop przekazany przez potomka:
 
 ``` html
-<div class="parent">
+<div class="rodzic">
   <child>
     <template slot-scope="props">
-      <span>hello from parent</span>
+      <span>rodzic wita się</span>
       <span>{{ props.text }}</span>
     </template>
   </child>
 </div>
 ```
 
-If we render the above, the output will be:
+Jeżeli wyrenderujemy powyższe, uzyskamy:
 
 ``` html
-<div class="parent">
-  <div class="child">
-    <span>hello from parent</span>
-    <span>hello from child</span>
+<div class="rodzic">
+  <div class="dziecko">
+    <span>rodzic wita się</span>
+    <span>dziecko wita się</span>
   </div>
 </div>
 ```
 
-> In 2.5.0+, `slot-scope` is no longer limited to `<template>` and can be used on any element or component.
+> W 2.5.0+, `slot-scope` nie jest już ograniczone do `<template>` i może być użyte w dowolnym elemencie lub komponencie.
 
-A more typical use case for scoped slots would be a list component that allows the component consumer to customize how each item in the list should be rendered:
+Bardziej typowym prykładem zastosowania slotu o ograniczonym zasięgu, jest komponent listy, pozwalający konsumentowi na ustalenie jak każdy z elementów listy ma być renderowany:
 
 ``` html
 <my-awesome-list :items="items">
-  <!-- scoped slot can be named too -->
+  <!-- slot o ograniczonym zasięu również może mieć nazwę -->
   <li
     slot="item"
     slot-scope="props"
@@ -1017,19 +1017,19 @@ A more typical use case for scoped slots would be a list component that allows t
 </my-awesome-list>
 ```
 
-And the template for the list component:
+I szablon dla komponentu listy:
 
 ``` html
 <ul>
   <slot name="item"
     v-for="item in items"
     :text="item.text">
-    <!-- fallback content here -->
+    <!-- tutaj treść zastępcza -->
   </slot>
 </ul>
 ```
 
-#### Destructuring
+#### Destrukturyzacja
 
 `slot-scope`'s value is in fact a valid JavaScript expression that can appear in the argument position of a function signature. This means in supported environments (in single-file components or in modern browsers) you can also use ES2015 destructuring in the expression:
 
