@@ -1031,17 +1031,17 @@ I szablon dla komponentu listy:
 
 #### Destrukturyzacja
 
-`slot-scope`'s value is in fact a valid JavaScript expression that can appear in the argument position of a function signature. This means in supported environments (in single-file components or in modern browsers) you can also use ES2015 destructuring in the expression:
+wartość `slot-scope` jest w rzeczywistości poprawnym wyrażeniem JavaScript, które może być argumentem funkcji. Oznacza to, że w obsługiwanych środowiskach (w komponentach pojedynczego pliku lub w nowoczesnych przeglądarkach) można również użyć destrukturyzacji z ES2015:
 
 ``` html
 <child>
-  <span slot-scope="{ text }">{{ text }}</span>
+  <span slot-scope="{ tekst }">{{ tekst }}</span>
 </child>
 ```
 
-## Dynamic Components
+## Komponenty dynamiczne
 
-You can use the same mount point and dynamically switch between multiple components using the reserved `<component>` element and dynamically bind to its `is` attribute:
+Możesz wybrać punktu montowania i dynamicznie przełączać komponenty w elemencie `<component>` łącząc się z jego atrybutem `is`:
 
 ``` js
 var vm = new Vue({
@@ -1059,15 +1059,15 @@ var vm = new Vue({
 
 ``` html
 <component v-bind:is="currentView">
-  <!-- component changes when vm.currentView changes! -->
+  <!-- jeżeli zmieni się vm.currentView zmieni się komponent! -->
 </component>
 ```
 
-If you prefer, you can also bind directly to component objects:
+Jeżeli wolisz, możesz również bindować bezpośrednio obiekt komponentu:
 
 ``` js
 var Home = {
-  template: '<p>Welcome home!</p>'
+  template: '<p>Witaj w domu!</p>'
 }
 
 var vm = new Vue({
@@ -1080,169 +1080,168 @@ var vm = new Vue({
 
 ### `keep-alive`
 
-If you want to keep the switched-out components in memory so that you can preserve their state or avoid re-rendering, you can wrap a dynamic component in a `<keep-alive>` element:
+Jeżeli chcesz zachować już nie wyświetlane komponenty możesz zachować ich stan lub zapobiec ponownemu renderowaniu, opakuj komponent w element `<keep-alive>`:
 
 ``` html
 <keep-alive>
   <component :is="currentView">
-    <!-- inactive components will be cached! -->
+    <!-- nieaktywny komponent pozostanie w cache! -->
   </component>
 </keep-alive>
 ```
 
-Check out more details on `<keep-alive>` in the [API reference](../api/#keep-alive).
+Więcej informacji o `<keep-alive>` znajdziesz w [dokumentacji API](../api/#keep-alive).
 
-## Misc
+## Różne
 
-### Authoring Reusable Components
+### Wytwarzanie komponentów wielokrotnego użytku
 
-When authoring components, it's good to keep in mind whether you intend to reuse it somewhere else later. It's OK for one-off components to be tightly coupled, but reusable components should define a clean public interface and make no assumptions about the context it's used in.
+Podczas tworzenia komponentów dobrze jest pamiętać, czy zamierzasz je później wykorzystać gdzieś później. Komponenty jednorazowe mogą być ściśle sprzężone, ale komponenty wielokrotnego użytku powinny definiować czysty interfejs publiczny i nie zakładać żadnych założeń dotyczących kontekstu, w którym są używane
 
-The API for a Vue component comes in three parts - props, events, and slots:
+Interfejs API komponentu Vue składa się z trzech części - prop, zdarzenia i sloty:
 
-- **Props** allow the external environment to pass data into the component
+- **Prop** pozwalają środowisku zewnętrznemu przekazywać dane do komponentu
 
-- **Events** allow the component to trigger side effects in the external environment
+- **Zdarzenia** pozwalają komponentowi wpływać na zewnętrzne środowisko
 
-- **Slots** allow the external environment to compose the component with extra content.
+- **Sloty** pozwalają zewnętrznemu środowisku na wypełnianie komponentu treścią.
 
-With the dedicated shorthand syntaxes for `v-bind` and `v-on`, the intents can be clearly and succinctly conveyed in the template:
+Dzięki dedykowanym skróconym składniom dla `v-bind` i `v-on`, intencje mogą być wyraźnie i zwięźle przedstawione w szablonie:
 
 ``` html
 <my-component
   :foo="baz"
   :bar="qux"
-  @event-a="doThis"
-  @event-b="doThat"
+  @event-a="zrobTo"
+  @event-b="zrobTamto"
 >
   <img slot="icon" src="...">
-  <p slot="main-text">Hello!</p>
+  <p slot="main-text">Witaj!</p>
 </my-component>
 ```
 
-### Child Component Refs
+### Identyfikator bezpośredniego odwołania do komponentu potomnego
 
-Despite the existence of props and events, sometimes you might still need to directly access a child component in JavaScript. To achieve this you have to assign a reference ID to the child component using `ref`. For example:
+Pomimo istnienia prop i zdarzeń, czasami możesz potrzebować bezpośredniego dostępu do komponentu potomnego w JavaScript. Aby to osiągnąć, musisz przypisać identyfikator referencyjny do komponentu potomnego za pomocą `ref`. Na przykład:
 
 ``` html
-<div id="parent">
-  <user-profile ref="profile"></user-profile>
+<div id="rodzic">
+  <user-profile ref="profil"></user-profile>
 </div>
 ```
 
 ``` js
-var parent = new Vue({ el: '#parent' })
-// access child component instance
-var child = parent.$refs.profile
+var rodzic = new Vue({ el: '#rodzic' })
+// odwołanie do instancji komponentu potomnego
+var dziecko = rodzic.$refs.profile
 ```
 
-When `ref` is used together with `v-for`, the ref you get will be an array containing the child components mirroring the data source.
+Kiedy `ref` jest używane razem z `v-for`, otrzymasz odpowiedź, która będzie tablicą zawierającą komponenty potomne, odzwierciedlające źródło danych.
 
-<p class="tip">`$refs` are only populated after the component has been rendered, and it is not reactive. It is only meant as an escape hatch for direct child manipulation - you should avoid using `$refs` in templates or computed properties.</p>
+<p class="tip">`$ refs` są emitowane tylko po wyrenderowaniu komponentu i nie są reaktywne. Jest to jedynie luka ewakuacyjna do bezpośredniej manipulacji dziećmi - powinieneś unikać używania `$ refs` w szablonach lub właściwościach wyliczonych.</p>
 
-### Async Components
+### Komponenty asynchroniczne
 
-In large applications, we may need to divide the app into smaller chunks and only load a component from the server when it's actually needed. To make that easier, Vue allows you to define your component as a factory function that asynchronously resolves your component definition. Vue will only trigger the factory function when the component actually needs to be rendered and will cache the result for future re-renders. For example:
+W dużych aplikacjach możemy potrzebować podzielić aplikację na mniejsze elementy i ładować komponent z serwera tylko wtedy, gdy jest rzeczywiście potrzebny. Aby to ułatwić, Vue pozwala ci zdefiniować twój komponent jako funkcję fabryczną, która asynchronicznie wywołuje Twój komponent. Vue uruchomi funkcję fabryczną, tylko gdy komponent rzeczywiście będzie wymagał renderowania i będzie buforował wynik dla przyszłych ponownych renderowań. Na przykład:
 
 ``` js
-Vue.component('async-example', function (resolve, reject) {
+Vue.component('async-przyklad', function (resolve, reject) {
   setTimeout(function () {
-    // Pass the component definition to the resolve callback
+    // Przekaże definicję componentu jako wywołanie zwrotne `resolve`
     resolve({
-      template: '<div>I am async!</div>'
+      template: '<div>Jestem asynchroniczny!</div>'
     })
   }, 1000)
 })
 ```
 
-The factory function receives a `resolve` callback, which should be called when you have retrieved your component definition from the server. You can also call `reject(reason)` to indicate the load has failed. The `setTimeout` here is for demonstration; how to retrieve the component is up to you. One recommended approach is to use async components together with [Webpack's code-splitting feature](https://webpack.js.org/guides/code-splitting/):
+Funkcja fabryczna otrzymuje wywołanie zwrotne `resolve`, które powinno zostać wywołane po pobraniu definicji komponentu z serwera. Możesz także zdefiniować `reject(reason)`, aby wskazać, że ładowanie się nie powiodło. `setTimeout` jest użyte tylko przykładowo, sposób pobrania komponentu zależy od Ciebie. Jednym z zalecanych sposobów jest użycie komponentów async razem z [funkcją podziału kodu Webpacka](https://webpack.js.org/guides/code-splitting/):
 
 ``` js
-Vue.component('async-webpack-example', function (resolve) {
-  // This special require syntax will instruct Webpack to
-  // automatically split your built code into bundles which
-  // are loaded over Ajax requests.
-  require(['./my-async-component'], resolve)
+Vue.component('async-webpack-przyklad', function (resolve) {
+  // Tutaj jest wymagana składnia instruująca Webpack,
+  // który automatycznie podziel twój kod wyjściowy na pakiety, 
+  // ładowanie za pomocą Ajax.
+  require(['./moj-komponent-async'], resolve)
 })
 ```
 
-You can also return a `Promise` in the factory function, so with Webpack 2 + ES2015 syntax you can do:
+Możesz również zwrócić `Promise` w funkcji fabrycznej, dzięki składni Webpack 2 + ES2015:
 
 ``` js
 Vue.component(
-  'async-webpack-example',
-  // The `import` function returns a `Promise`.
-  () => import('./my-async-component')
+  'async-webpack-przyklad',
+  // Funkcja `import` zwraca `Promise`.
+  () => import('./moj-komponent-async')
 )
 ```
 
-When using [local registration](components.html#Local-Registration), you can also directly provide a function that returns a `Promise`:
+Korzystając z [rejestracji lokalnej](components.html#Rejestracja-lokalna), możesz zdefiniować funkcję, która zwraca `Promise`:
 
 ``` js
 new Vue({
   // ...
   components: {
-    'my-component': () => import('./my-async-component')
+    'moj-komponent': () => import('./moj-komponent-async')
   }
 })
 ```
+<p class = "tip"> Jeśli korzystasz z<strong> Browserify </strong> i chciałbyś użyć komponentów asynchronicznych, nie mam dobrych wieści: jego autor [wyraźnie powiedział](https://github.com/substack/node-browserify/issues/58#issuecomment-21978224), że ładowanie asynchroniczne nigdy nie będzie oficjalnie wspierane przez Browserify. Społeczność Browserify znalazła [kilka obejść] (https://github.com/vuejs/vuejs.org/issues/620), które mogą być pomocne dla już istniejących, rozbudowanych aplikacji. W przypadku wszystkich innych scenariuszy zalecamy używanie pakietu Webpack do wbudowanej obsługi asynchronicznej. </p>
 
-<p class="tip">If you're a <strong>Browserify</strong> user that would like to use async components, its creator has unfortunately [made it clear](https://github.com/substack/node-browserify/issues/58#issuecomment-21978224) that async loading "is not something that Browserify will ever support." Officially, at least. The Browserify community has found [some workarounds](https://github.com/vuejs/vuejs.org/issues/620), which may be helpful for existing and complex applications. For all other scenarios, we recommend using Webpack for built-in, first-class async support.</p>
+### Zaawansowane komponenty asynchroniczne
 
-### Advanced Async Components
+> Nowość w 2.3.0+
 
-> New in 2.3.0+
-
-Starting in 2.3.0+ the async component factory can also return an object of the following format:
+Począwszy od wersji 2.3.0+ wbudowany komponent asynchroniczny może również zwracać obiekt w poniższym formacie:
 
 ``` js
 const AsyncComp = () => ({
-  // The component to load. Should be a Promise
+  // Komponent do pobrania. Powinien być promesą
   component: import('./MyComp.vue'),
-  // A component to use while the async component is loading
+  // Komponent do użycia w czasie, gdy komponent asynchroniczny jest wczytywany
   loading: LoadingComp,
-  // A component to use if the load fails
+  // Komponent do użycia w razie problemu z ładowaniem
   error: ErrorComp,
-  // Delay before showing the loading component. Default: 200ms.
+  // Opóźnienie pokazania komponentu, domyślnie: 200 ms.
   delay: 200,
-  // The error component will be displayed if a timeout is
-  // provided and exceeded. Default: Infinity.
+  // Komponent ErrorComp będzie wyświetlony 
+  // jeżeli timeout jest zdefiniowany i osiągnięty.
+  // Domyślnie nieskonczoność.
   timeout: 3000
 })
 ```
 
-Note that when used as a route component in `vue-router`, these properties will be ignored because async components are resolved upfront before the route navigation happens. You also need to use `vue-router` 2.4.0+ if you wish to use the above syntax for route components.
+Zauważ, że gdy użyjesz go jako komponentu routującego `vue-router`, właściwości te zostaną zignorowane, ponieważ komponenty asynchroniczne są rozwiązywane z góry przed rozpoczęciem routingu. Musisz także użyć `vue-router` 2.4.0+, jeśli chcesz użyć powyższej składni dla komponentów routujących.
 
-### Component Naming Conventions
+### Konwencja nazewnictwa komponentów
 
-When registering components (or props), you can use kebab-case, camelCase, or PascalCase.
+Rejestrując komponenty (lub props), możesz używać kebab-case, camelCase, lub PascalCase.
 
 ``` js
-// in a component definition
+// w definicji komponentu
 components: {
-  // register using kebab-case
+  // rejestracja z użyciem kebab-case
   'kebab-cased-component': { /* ... */ },
-  // register using camelCase
+  // rejestracja z użyciem camelCase
   'camelCasedComponent': { /* ... */ },
-  // register using PascalCase
+  // rejestracja z użyciem PascalCase
   'PascalCasedComponent': { /* ... */ }
 }
 ```
-
-Within HTML templates though, you have to use the kebab-case equivalents:
+Jednak w szablonach HTML musisz używać ich odpowiedników w kebab-case:
 
 ``` html
-<!-- always use kebab-case in HTML templates -->
+<!-- zawsze używaj kebab-case w szablonach HTML -->
 <kebab-cased-component></kebab-cased-component>
 <camel-cased-component></camel-cased-component>
 <pascal-cased-component></pascal-cased-component>
 ```
 
-When using _string_ templates however, we're not bound by HTML's case-insensitive restrictions. That means even in the template, you can reference your components using:
+Korzystając z szablonów łańcuchowych nie obowiązują Cię te restrykcjie. To oznacza, że nawet w szablonie możesz odwoływać się do swoich komponentów z użyciem:
 
 - kebab-case
-- camelCase or kebab-case if the component has been defined using camelCase
-- kebab-case, camelCase or PascalCase if the component has been defined using PascalCase
+- camelCase lub kebab-case jeżeli komponent jest zdefiniowany z użyciem camelCase
+- kebab-case, camelCase lub PascalCase jeżeli komponent jest zdefiniowany z użyciem PascalCase
 
 ``` js
 components: {
@@ -1263,44 +1262,43 @@ components: {
 <PascalCasedComponent></PascalCasedComponent>
 ```
 
-This means that the PascalCase is the most universal _declaration convention_ and kebab-case is the most universal _usage convention_.
+To oznacza, że PascalCase jest najbardziej uniwersalną _konwencją deklaracji_ a kebeb-case najbardzoiej uniwersalną _konwencją wywołania_.
 
-If your component isn't passed content via `slot` elements, you can even make it self-closing with a `/` after the name:
+Jeżeli Twój komponent nie przyjmuje z użyciem elementów `slot`, możesz nawet użyć znaku zamknięcia tagu `/` po nazwie:
 
 ``` html
 <my-component/>
 ```
 
-Again, this _only_ works within string templates, as self-closing custom elements are not valid HTML and your browser's native parser will not understand them.
+Ponownie, to działa _tylko_ w szablonach łańcuchowych, samozamykające tagi użytkownika nie są prawidłowymi tagami HTML i natywny parser przeglądarki nie zrozumie ich.
 
-### Recursive Components
+### KOmponenty rekurencyjne
 
-Components can recursively invoke themselves in their own template. However, they can only do so with the `name` option:
+KOmponenty mogą rekurencyjnie wywoływać same siebie w swoim szablonie. Jednak mogą to zrobić tylko z opcją `name`:
 
 ``` js
-name: 'unique-name-of-my-component'
+name: 'unikalna-nazwa-mojego-komponentu'
 ```
 
-When you register a component globally using `Vue.component`, the global ID is automatically set as the component's `name` option.
+Po zarejestrowaniu komponentu globalnie przy użyciu `Vue.component`, globalny ID jest automatycznie ustawiany jako opcja `name` komponentu.
 
 ``` js
-Vue.component('unique-name-of-my-component', {
+Vue.component('unikalna-nazwa-mojego-komponentu', {
   // ...
 })
 ```
 
-If you're not careful, recursive components can also lead to infinite loops:
+Jeśli nie jesteś ostrożny, elementy rekurencyjne mogą również prowadzić do nieskończonych pętli:
 
 ``` js
 name: 'stack-overflow',
 template: '<div><stack-overflow></stack-overflow></div>'
 ```
+Składnik taki jak powyższy spowoduje błąd "max stack size exceeded" (przekroczenia maksymalnego rozmiaru stosu), więc upewnij się, że wywołanie rekurencyjne jest warunkowe (to znaczy używa `v-if`, które ostatecznie będzie `false`).
 
-A component like the above will result in a "max stack size exceeded" error, so make sure recursive invocation is conditional (i.e. uses a `v-if` that will eventually be `false`).
+### Kołowe odniesienia między komponentami
 
-### Circular References Between Components
-
-Let's say you're building a file directory tree, like in Finder or File Explorer. You might have a `tree-folder` component with this template:
+Załóżmy, że budujesz drzewo katalogów plików, jak w Finderze lub Eksploratorze plików. Możesz mieć komponent `tree-folder` z tym szablonem:
 
 ``` html
 <p>
@@ -1309,7 +1307,7 @@ Let's say you're building a file directory tree, like in Finder or File Explorer
 </p>
 ```
 
-Then a `tree-folder-contents` component with this template:
+Następnie komponent `tree-folder-contents` z szablonem:
 
 ``` html
 <ul>
@@ -1320,17 +1318,17 @@ Then a `tree-folder-contents` component with this template:
 </ul>
 ```
 
-When you look closely, you'll see that these components will actually be each other's descendent _and_ ancestor in the render tree - a paradox! When registering components globally with `Vue.component`, this paradox is resolved for you automatically. If that's you, you can stop reading here.
+Kiedy przyjrzysz się uważnie, zobaczysz, że te komponenty będą w rzeczywistości potomnymi przodkami w drzewie renderowania - paradoksalnie! Podczas rejestrowania komponentów globalnie za pomocą `Vue.component`, ten paradoks jest rozwiązywany automatycznie. Jeśli ta informacja CIę satysfakcjonuje, możesz nie czytać dalej.
 
-However, if you're requiring/importing components using a __module system__, e.g. via Webpack or Browserify, you'll get an error:
+Jeśli jednak potrzebujesz/importujesz komponenty używając __module system__, np. przez Webpack lub Browserify dostaniesz błąd:
 
 ```
 Failed to mount component: template or render function not defined.
 ```
 
-To explain what's happening, let's call our components A and B. The module system sees that it needs A, but first A needs B, but B needs A, but A needs B, etc, etc. It's stuck in a loop, not knowing how to fully resolve either component without first resolving the other. To fix this, we need to give the module system a point at which it can say, "A needs B _eventually_, but there's no need to resolve B first."
+Aby wyjaśnić, co się dzieje, odnieśmy się do naszych komponentów A i B. System modułów widzi, że potrzebuje A, ale najpierw A potrzebuje B, ale B potrzebuje A, ale A potrzebuje B itd. Itd. Utknął w pętli, nie wiedząc jak w pełni rozwiązać któryś z komponentów bez uprzedniego rozwiązania drugiego. Aby to naprawić, musimy nadać systemowi modułów punkt, w którym może on powiedzieć: "A potrzebuje B _finalnie_, ale nie ma potrzeby, aby najpierw rozwiązywać B".
 
-In our case, let's make that point the `tree-folder` component. We know the child that creates the paradox is the `tree-folder-contents` component, so we'll wait until the `beforeCreate` lifecycle hook to register it:
+W naszym przykładzie, zróbmy ten punkt komponentem `tree-folder`. Wiemy, że dziecko, które tworzy paradoks, jest komponentem `tree-folder-contents`, więc poczekamy, aż uchwyt cyklu `beforeCreate` zauważy je:
 
 ``` js
 beforeCreate: function () {
@@ -1338,30 +1336,30 @@ beforeCreate: function () {
 }
 ```
 
-Problem solved!
+Problem rozwiązany!
 
-### Inline Templates
+### Szablny liniowe
 
-When the `inline-template` special attribute is present on a child component, the component will use its inner content as its template, rather than treating it as distributed content. This allows more flexible template-authoring.
+Gdy specjalny atrybut `inline-template` jest obecny w komponencie podrzędnym, komponent użyje jego wewnętrznej zawartości jako szablonu, zamiast traktować go jako rozproszoną treść. Pozwala to na bardziej elastyczne tworzenie szablonów.
 
 ``` html
 <my-component inline-template>
   <div>
-    <p>These are compiled as the component's own template.</p>
-    <p>Not parent's transclusion content.</p>
+    <p>To jest kompilowane jako własny szablon komponentu.</p>
+    <p>Nie jako treść wymoszona przez rodzica.</p>
   </div>
 </my-component>
 ```
 
-However, `inline-template` makes the scope of your templates harder to reason about. As a best practice, prefer defining templates inside the component using the `template` option or in a `template` element in a `.vue` file.
+Jednakże `inline-template` sprawia, że zakres szablonów jest trudniejszy do zrozumienia. Najlepszą metodą jest definiowanie szablonów wewnątrz komponentu za pomocą opcji `template` lub elementu `template` w pliku `.vue`.
 
 ### X-Templates
 
-Another way to define templates is inside of a script element with the type `text/x-template`, then referencing the template by an id. For example:
+Innym sposobem definiowania szablonów wewnątrz elementu jest skrypt typu `text/x-template`, a następnie odniesienie do szablonu przez id. Na przykład:
 
 ``` html
 <script type="text/x-template" id="hello-world-template">
-  <p>Hello hello hello</p>
+  <p>Hej hej hej</p>
 </script>
 ```
 
@@ -1371,18 +1369,18 @@ Vue.component('hello-world', {
 })
 ```
 
-These can be useful for demos with large templates or in extremely small applications, but should otherwise be avoided, because they separate templates from the rest of the component definition.
+Mogą być użyteczne w przypadku wersji demonstracyjnych z dużymi szablonami lub w bardzo małych aplikacjach, ale w przeciwnym razie należy ich unikać, ponieważ oddzielają szablon od reszty definicji komponentu.
 
-### Cheap Static Components with `v-once`
+### Tanie komponenty statyczne z `v-once`
 
-Rendering plain HTML elements is very fast in Vue, but sometimes you might have a component that contains **a lot** of static content. In these cases, you can ensure that it's only evaluated once and then cached by adding the `v-once` directive to the root element, like this:
+Renderowanie prostych elementów HTML jest bardzo szybkie w Vue, ale czasami możesz mieć komponent zawierający **dużo** statycznej treści. W takich przypadkach można się upewnić, że jest on sprawdzany tylko raz, a następnie buforowany przez dodanie do elementu głównego dyrektywy `v-once`, na przykład:
 
 ``` js
-Vue.component('terms-of-service', {
+Vue.component('regulamin', {
   template: '\
     <div v-once>\
-      <h1>Terms of Service</h1>\
-      ... a lot of static content ...\
+      <h1>Regulamin</h1>\
+      ... mnóstwo statycznej zawartości ...\
     </div>\
   '
 })
