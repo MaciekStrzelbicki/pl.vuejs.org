@@ -6,9 +6,9 @@ order: 11
 
 ## Czym są komponenty?
 
-Komponenty są jedną z najpotężniejszych cech Vue. Pozwalają na rozszeżenie podstawowego html i enkapsulacje go do ponownego uzycia. Na wysokim poziomie, komponenty są personalizowanymi elementami, do których kompilator Vue dodaje dynamikę. W niektórych przypadkach moga wystepować jako natywny HTML rozszeżony o atrybut `is`.
+Komponenty są jedną z najpotężniejszych funkcjonalności Vue. Pozwalają na rozszeżenie podstawowego htmla i enkapsulacje go do ponownego użycia. Komponenty są personalizowanymi elementami, do których kompilator Vue dodaje dynamikę. W niektórych przypadkach moga wystepować jako natywny HTML rozszeżony o atrybut `is`.
 
-Każdy komponent jest jednocześnie instancja Vue, więc przyjmuje taki sam obiekt z opcjami (poza kilkoma specjanymi opcjami) i oferuje takie same uchwyty cyli życia.
+Każdy komponent jest jednocześnie instancja Vue, więc przyjmuje taki sam obiekt z opcjami (poza kilkoma specjanymi opcjami) i oferuje takie same uchwyty cylki życia.
 
 ## Korzystanie z komponentów
 
@@ -32,7 +32,7 @@ Vue.component('moj-komponent', {
 })
 ```
 
-<p class="tip">Zauważ, że Vue nie wymusza stosowania reguł [W3C](https://www.w3.org/TR/custom-elements/#concepts) dla nazw tagów użytkownika (wszytsko małymi literami, muszą zawierać dywiz) ale przestrzeganie tej konwencji jest dora praktyką.</p>
+<p class="tip">Zauważ, że Vue nie wymusza stosowania reguł [W3C](https://www.w3.org/TR/custom-elements/#concepts) dla nazw tagów użytkownika (wszytsko małymi literami, muszą zawierać dywiz) ale przestrzeganie tej konwencji jest dobrą praktyką.</p>
 
 Zarejestrownay komponent może być uzyty w szablonie instancji jako tag użytkownika `<moj-komponent></moj-komponent>`. Upewnij się, że komponent jest Zarejestrownay **przed** utworzeniem głównej instancji Vue. Poniżej przykład:
 
