@@ -23,7 +23,7 @@ new Vue({
 })
 ```
 
-Aby zrejestrować komponent globalnie, użyj: `Vue.component(tagName, options)`.
+Aby zrejestrować komponent globalnie, użyj: `Vue.component(nazwaTagu, opcje)`.
 Przykład:
 
 ``` js
@@ -34,7 +34,7 @@ Vue.component('moj-komponent', {
 
 <p class="tip">Zauważ, że Vue nie wymusza stosowania reguł [W3C](https://www.w3.org/TR/custom-elements/#concepts) dla nazw tagów użytkownika (wszytsko małymi literami, muszą zawierać dywiz) ale przestrzeganie tej konwencji jest dobrą praktyką.</p>
 
-Zarejestrownay komponent może być uzyty w szablonie instancji jako tag użytkownika `<moj-komponent></moj-komponent>`. Upewnij się, że komponent jest Zarejestrownay **przed** utworzeniem głównej instancji Vue. Poniżej przykład:
+Zarejestrownay komponent może być użyty w szablonie instancji jako tag użytkownika `<moj-komponent></moj-komponent>`. Upewnij się, że komponent jest Zarejestrownay **przed** utworzeniem głównej instancji Vue. Poniżej przykład:
 
 ``` html
 <div id="example">
@@ -79,7 +79,7 @@ new Vue({ el: '#example' })
 Nie musisz rejestrować każdego komponentu globalnie. Możesz utworzyć komponent dostępny tylko w zasięgu innej instancji/komponentu, rejestrując go opcją `components` w instancji:
 
 ``` js
-var potomek = {
+var Dziecko = {
   template: '<div>Komponent użytkownika!</div>'
 }
 
@@ -87,7 +87,7 @@ new Vue({
   // ...
   components: {
     // <moj-komponent> będzie dostępny tylko w szablonie elementu nadrzędnego
-    'moj-komponent': Child
+    'moj-komponent': Dziecko
   }
 })
 ```
@@ -96,31 +96,31 @@ Ta sama enkapsulacja dotyczy innych zarejestrowanych funkcjonalności Vue, takic
 
 ### Parsowanie szablonów DOM
 
-Korzystając z DOM jako szablonu (np: używając opcji `el` do osadzenia elementu z istniejącą zawartością), napotkasz pewne ograniczenia wynikające z działania HTMLa, ponieważ Vue może podbrać zawartość szablonu **po** parsowaniu i normalizacji przez przeglądarkę. Dzieje się tak dlatego, że elementy jak `<ul>`, `<ol>`, `<table>` i `<select>` mogą się pojawić jedynie wewątrz innych elementów.
+Korzystając z DOM jako szablonu (np: używając opcji `el` do osadzenia elementu z istniejącą zawartością), napotkasz pewne ograniczenia wynikające z działania HTMLa, ponieważ Vue może pobrać zawartość szablonu **po** parsowaniu i normalizacji przez przeglądarkę. Dzieje się tak dlatego, że elementy jak `<ul>`, `<ol>`, `<table>` i `<select>` mogą się pojawić jedynie wewątrz innych elementów.
 
 Doprowadzi to do problemów podczas używania niestandardowych komponentów z elementami, które mają takie ograniczenia, na przykład:
 
 ``` html
 <table>
-  <moj-row>...</moj-row>
+  <moj-wiersz>...</moj-wiersz>
 </table>
 ```
 
-Komponent `<my-row>` zostanie potraktowany jako nieprawidłowa zawartość, to może generować błędy podczas renderowania. Obejściem jest zastosowanie atrybutu `is`:
+Komponent `<moj-wiersz>` zostanie potraktowany jako nieprawidłowa zawartość i wygeneruje błędy podczas renderowania. Obejściem jest zastosowanie atrybutu `is`:
 
 ``` html
 <table>
-  <tr is="moj-row"></tr>
+  <tr is="moj-wiersz"></tr>
 </table>
 ```
 
-**Te ograniczenia nie wystepują jeżeli wykorzystujesz szablony łańcuchowe z wymienionych źródeł:**
+**Te ograniczenia nie wystepują jeżeli wykorzystujesz szablony łańcuchowe z poniższych źródeł:**
 
 - `<script type="text/x-template">`
 - szablon osadzony lokalnie jako łańcuch JavaScript
 - komponenty `.vue`
 
-W związku z tym należy korzystać z szablonów łancuchowych, zawsze kiedy to jest mozliwe.
+W związku z tym należy korzystać z szablonów łańcuchowych, zawsze kiedy to jest możliwe.
 
 ### `data` musi być funkcją
 
@@ -135,7 +135,7 @@ Vue.component('moj-component', {
 })
 ```
 
-Vue zatrzyma się i wyświetli w konsoli komunikat: `data` must be a function for component instances (dla instancji komponentu `data` musi byc funkcją). Żeby lepiej zrozumieć zasady spróbujmy nieco oszukać:
+Vue zatrzyma się i wyświetli w konsoli komunikat: `data` must be a function for component instances (`data` musi byc funkcją dla instancji komponentu). Żeby lepiej zrozumieć zasady spróbujmy nieco oszukać:
 
 ``` html
 <div id="example-2">
@@ -183,8 +183,7 @@ new Vue({
 </script>
 {% endraw %}
 
-Jeżeli każda z instancji komponentu ma ten sam obiekt `data`, inkrementacja jednego licznika inkrementuje wszystkie!
-Since all three component instances share the same `data` object, incrementing one counter increments them all! Ouch. Naprawmy to, zwracając nowy obiekt `data`:
+Jeżeli każda z instancji komponentu ma ten sam obiekt `data`, inkrementacja jednego licznika inkrementuje wszystkie! Naprawmy to, zwracając nowy obiekt `data`:
 
 ``` js
 data: function () {
@@ -231,16 +230,16 @@ W Vue relacje komponentów rodzic-dziecko można podsumować jako: **props przek
 
 ### Przekazywanie danych przez właściwość props
 
-Każda instancja komponentu ma swój **izolowany zasięg**. To oznacza, że nie możesz (i nie powinieneś) odwoływać się bezpośrednio do danych rodzica w szablonie komponentu potomnego. Dane moga być przekazywane w dół do komponentu potomnego korzystając z **props**.
+Każda instancja komponentu ma swój **izolowany zasięg**. To oznacza, że nie możesz (i nie powinieneś) odwoływać się bezpośrednio do danych rodzica w szablonie komponentu potomnego. Dane moga być przekazywane w dół, do komponentu potomnego korzystając z **props**.
 
-Props jest atrybutem użytkownika do przekazywania informacji z nadrzędnego komponentu. Komponent musi mieć jawnie zadeklarowane właściwości, których oczekuje. Deklaruje się je za pomocą opcji [`props`](../api/#props):
+Props jest atrybutem użytkownika służącym do przekazywania informacji z nadrzędnego komponentu. Komponent musi mieć jawnie zadeklarowane właściwości, których oczekuje. Deklaruje się je za pomocą opcji [`props`](../api/#props):
 
 ``` js
 Vue.component('dziecko', {
   // deklaracja właściwości
   props: ['komunikat'],
-  // tak jak 'data', 'props' może być uzyte wewnątrz szablonu
-  // i jest również dostępny w vm jako this.message
+  // podobnie jak 'data', 'props' może być użyty wewnątrz szablonu
+  // i jest również dostępny w vm jako this.komunikat
   template: '<span>{{ komunikat }}</span>'
 })
 ```
@@ -251,7 +250,7 @@ Wtedy możemy przekazać zwykły ciąg znaków w ten sposób:
 <dziecko komunikat="Cześć!"></dziecko>
 ```
 
-Result:
+Wynik:
 
 {% raw %}
 <div id="prop-example-1" class="demo">
@@ -287,11 +286,11 @@ Vue.component('dziecko', {
 <dziecko moj-komunikat="Cześć!"></dziecko>
 ```
 
-Ponownie: te ograniczenia nie wystepują jeżeli wykorzystujesz szablony łańcuchowe.
+Ponownie: te ograniczenia nie wystepują, jeżeli wykorzystujesz szablony łańcuchowe.
 
 ### Dynamiczna właściwość props
 
-Podobnie do bindowania normalnego atrybutu do wyrażenia, również możesz użyć `v-bind` do dynamicznego binowania właściwości do danych w rodzicu. Jeżeli dane zostaną zaktualizowane w rodzicu, zostaną równiez przekazane dziecku:
+Podobnie jak bindowanie normalnego atrybutu do wyrażenia, również możesz użyć `v-bind` do dynamicznego binowania props z danymi rodzica. Jeżeli dane zostaną zaktualizowane w rodzicu, zostaną również przekazane dziecku:
 
 ``` html
 <div>
@@ -331,7 +330,7 @@ new Vue({
 </script>
 {% endraw %}
 
-Jeżeli chcesz przekazać wszystkie właściwości w obiekcie jako właściwość props, możesz uzyć `v-bind` bez argumentu (`v-bind` zamiast `v-bind:nazwa-wlasciwosci`). Na przykład obiekt `todo`:
+Jeżeli chcesz przekazać wszystkie właściwości obiektu jako właściwość props, możesz uzyć `v-bind` bez argumentu (`v-bind` zamiast `v-bind:nazwa-wlasciwosci`). Na przykład, obiekt `todo`:
 
 ``` js
 todo: {
@@ -357,7 +356,7 @@ będzie ekwiwalentem:
 
 ### Literał a dynamika
 
-Czestym błędem początkujacych jest próba ustawienia wartości za pomoca składni literału:
+Częstym błędem początkujacych jest próba ustawienia wartości za pomoca składni literału:
 
 ``` html
 <!-- ma ustawić właściwość na "1" -->
@@ -371,9 +370,9 @@ Ponieważ jest to literał, przyjmuje warość '"1"' jako łańcuch znaków. Je�
 <comp v-bind:jakis-prop="1"></comp>
 ```
 
-### Jednokierunkowy przeplyw dancyh
+### Jednokierunkowy przepływ danych
 
-Wszystkie bindowanego właściwości props tworzą połączenie do **jednokierunkowego przekazywania w dół** pomiędzy dzieckiem, a rodzicem: gdy właściwość w rodzicu zostanie zaktualizowana, zostanie przekazana dziecku ale owrtonie już nie. To zapobiega przypadkowym zmianom stanów komponentów nadrzednych przez potomne, co by sprawiło, że kod aplikacji byłby trudny do zrozumienia.
+Wszystkie bindowane właściwości props tworzą połączenie do **jednokierunkowego przekazywania danych - w dół** pomiędzy dzieckiem, a rodzicem: gdy właściwość w rodzicu zostanie zaktualizowana, zostanie przekazana dziecku ale owrtonie już nie. To zapobiega przypadkowym zmianom stanów komponentów nadrzednych przez potomne, co by sprawiło, że kod aplikacji byłby trudny do zrozumienia.
 
 Pondato każdorazowa aktualizacja komponentu nadrzędnego powoduje odświerzenie wszystkich właściwości props elemendu podrzędnego, do ich ostatnich wartości. To oznacza, że **nie** powinieneś próbować zmieniać właściwości prop wewnątrz komponentu potomnego. Jeżeli to zrobisz Vue ostrzeże Cię komunikatem w konsoli.
 
