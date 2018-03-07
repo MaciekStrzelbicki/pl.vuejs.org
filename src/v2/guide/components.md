@@ -372,7 +372,7 @@ Ponieważ jest to literał, przyjmuje warość '"1"' jako łańcuch znaków. Je�
 
 ### Jednokierunkowy przepływ danych
 
-Wszystkie bindowane właściwości props tworzą połączenie do **jednokierunkowego przekazywania danych - w dół** pomiędzy dzieckiem, a rodzicem: gdy właściwość w rodzicu zostanie zaktualizowana, zostanie przekazana dziecku ale owrtonie już nie. To zapobiega przypadkowym zmianom stanów komponentów nadrzednych przez potomne, co by sprawiło, że kod aplikacji byłby trudny do zrozumienia.
+Wszystkie bindowane właściwości props tworzą połączenie do **jednokierunkowego przekazywania danych - w dół** pomiędzy dzieckiem, a rodzicem: gdy właściwość w rodzicu zostanie zaktualizowana, zostanie przekazana dziecku ale odwrotnie już nie. To zapobiega przypadkowym zmianom stanów komponentów nadrzędnych przez potomne, co by sprawiło, że kod aplikacji byłby trudny do zrozumienia.
 
 Pondato każdorazowa aktualizacja komponentu nadrzędnego powoduje odświerzenie wszystkich właściwości props elemendu podrzędnego, do ich ostatnich wartości. To oznacza, że **nie** powinieneś próbować zmieniać właściwości prop wewnątrz komponentu potomnego. Jeżeli to zrobisz Vue ostrzeże Cię komunikatem w konsoli.
 
@@ -409,9 +409,9 @@ Własciwymi rozwiązaniami powyższych problemów są:
 
 ### Walidacja prop
 
-Jest mozliwość żeby komponent określał wymogi dla przyjmowanych props. Jeżeli nie zostaną spelnione Vue wyswietli ostrzeżenie. Jest to szczególnie przydatne przy pisaniu kompoentów mających być wykorzystywanych przez innych.
+Jest mozliwość żeby komponent określał wymogi dla przyjmowanych props. Jeżeli nie zostaną spelnione Vue wyswietli ostrzeżenie. Jest to szczególnie przydatne przy pisaniu komponentów mających być wykorzystywanych przez innych.
 
-Zamiast definiować props w tablicy łańcuchów możesz użyć obiektu z walidacją oczekiwań:
+Zamiast definiować props w tablicy łańcuchów możesz użyć, obiektu z wymogami:
 
 ``` js
 Vue.component('example', {
@@ -447,7 +447,7 @@ Vue.component('example', {
 })
 ```
 
-"Typ" może być jednym z następujących natywnych konstruktorów:
+`type` może być jednym z następujących natywnych konstruktorów:
 
 - String
 - Number
@@ -457,9 +457,9 @@ Vue.component('example', {
 - Array
 - Symbol
 
-Ponadto, `type` może być funkcją konstruktora użytkownika a asercja zostanie wykonana przy pomocy sprawdzenia `instanceOf`.
+Ponadto, `type` może być funkcją konstruktora użytkownika, a asercja zostanie wykonana przy pomocy sprawdzenia `instanceOf`.
 
-Jeżeli prop nie przejdzie walidacji Vue wyświetli ostrzeżenie w konsoli (jeżeli korzystarz z buildu deweloperskiego). Zauważ, że props są walidowane __przed__ utworzeniem instancji, więc w funkcjach `default` lub` validator` właściwości instancji takie jak `data`, `computed` lub `methods` nie będa dostępne.
+Jeżeli prop nie przejdzie walidacji, Vue wyświetli ostrzeżenie w konsoli (jeżeli korzystarz z buildu deweloperskiego). Zauważ, że props są walidowane __przed__ utworzeniem instancji, więc w funkcjach `default` lub` validator` właściwości instancji takie jak `data`, `computed` lub `methods` nie będa dostępne.
 
 ## Atrybuty Non-Prop
 
@@ -483,7 +483,7 @@ Wyobraź sobie taki kod w szablonie dla `bs-date-input`:
 <input type="date" class="form-control">
 ```
 
-Aby określiść skórkę dla wtyczki selektora daty, musimy dodać konkretną klasę:
+Aby określiść skórkę dla selektora daty, musimy dodać konkretną klasę:
 
 ``` html
 <bs-date-input
@@ -591,7 +591,7 @@ new Vue({
 </script>
 {% endraw %}
 
-Zwróc uwagę, że w tym przykladzie komponent potomny wciąż jest całkowicie odseparowany od tego co się dzieje na zewnątrz. Jego zadaniem jest przekazywanie informacji o swojej aktywności na wypadek, gdyby to mogło dotyczyć komponentu nadrzędnego.
+Zwróc uwagę, że w tym przykladzie komponent potomny wciąż jest całkowicie odseparowany od tego co się dzieje na zewnątrz. Jego zadaniem jest przekazywanie informacji o swojej aktywności na wypadek, gdyby mogła dotyczyć komponentu nadrzędnego.
 
 ### Bindowanie natywnych zdarzeń do komponentu
 
@@ -624,7 +624,7 @@ ewoluował do:
 <comp :foo="bar" @update:foo="val => bar = val"></comp>
 ```
 
-Wystarczy, że komponent potomny zaktualizuje `foo`, zamiast zmieniać prop, wyemituje zdarzenie:
+Aby komponent potomny zaktualizował wartość `foo`, musi jawnie wyemitować zdarzenie zamiast mutować prop:
 
 ``` js
 this.$emit('update:foo', newValue)
@@ -632,7 +632,7 @@ this.$emit('update:foo', newValue)
 
 ### Komponenty inputów formularza korzystające z niestandardowych zdarzeń
 
-Niestandardowe zdarzenia moga być również użyte do tworzenia niestandardowych inputów współpracujących z `v-model`. Zapamietaj:
+Niestandardowe zdarzenia mogą być również użyte do tworzenia niestandardowych inputów współpracujących z `v-model`. Zapamietaj:
 
 ``` html
 <input v-model="costam">
@@ -751,7 +751,7 @@ Powyższa implementacja jest jednak dość naiwna. Na przykład użytkownicy mog
 
 <iframe width="100%" height="300" src="https://jsfiddle.net/chrisvfritz/1oqjojjx/embedded/result,html,js" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 
-### Customizing Component `v-model`
+### Presonalizacja `v-model`
 
 > Nowe 2.2.0+
 
