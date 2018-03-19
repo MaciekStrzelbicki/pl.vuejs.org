@@ -789,7 +789,7 @@ Powyższe będzie równoznaczne z:
 
 ### Komunikacja poza relacjami rodzic-dziecko
 
-Czasami dwa komponenty potrzebują się skomunikować, ale nie są w wzajemnej relacji rodzic-dziecko. Najprostszym rozwiązaniem jest wykorzystanie pustej instacji Vue jako centralna magistrala zdarzeń:  
+Czasami dwa komponenty potrzebują się skomunikować, ale nie są we wzajemnej relacji rodzic-dziecko. Najprostszym rozwiązaniem jest wykorzystanie pustej instacji Vue jako centralnej magistrali zdarzeń:  
 
 ``` js
 var bus = new Vue()
@@ -805,7 +805,7 @@ bus.$on('id-selected', function (id) {
 })
 ```
 
-W bardziej skomplikowanych przypadkach, należy rozważyć użycie dedykowanego [szablon zarządzania zdarzeniami](state-management.html).
+W bardziej skomplikowanych przypadkach, należy rozważyć użycie dedykowanego [szablonu zarządzania zdarzeniami](state-management.html).
 
 ## Dystrybucja zawartości za pomocą slotów
 
@@ -824,7 +824,7 @@ Zwróc uwagę na dwa aspekty:
 
 2. Komponent `<app>` bardzo często ma własny szablon.
 
-Aby kompozycja działała, potrzebujemy sposobu na przeplatanie nadrzędnej "treści" i własnego szablonu komponentu. Jest to proces o nazwie **content distribution** (lub "transclusion", jeśli znasz Angular). Vue.js implementuje interfejs API do dystrybucji treści, który jest wzorowany na aktualnym projekcie specyfikacji [Web Components] (https://github.com/w3c/webcomponents/blob/gh-pages/proposals/Slots-Proposal.md), wykorzystujący specjalny element `<slot>" służący jako punkty dystrybucyjne dla oryginalnej treści.
+Aby kompozycja działała, potrzebujemy sposobu na przeplatanie nadrzędnej "treści" i własnego szablonu komponentu. Jest to proces o nazwie **content distribution** (lub "transclusion", jeśli znasz Angular). Vue.js implementuje interfejs API do dystrybucji treści, który jest wzorowany na aktualnym projekcie specyfikacji [Web Components](https://github.com/w3c/webcomponents/blob/gh-pages/proposals/Slots-Proposal.md), wykorzystujący specjalny element `<slot>` służący jako punkty dystrybucyjne dla oryginalnej treści.
 
 ### Zasięg kompilacji
 
@@ -853,7 +853,7 @@ Jeśli chcesz powiązać dyrektywy z zasięgu dziecka z węzłem głównym kompo
 
 ``` js
 Vue.component('child-component', {
-  // this does work, because we are in the right scope
+  // to zadziała ponieważ jesteśmy we właściwym zakresie
   template: '<div v-show="someChildProperty">Child</div>',
   data: function () {
     return {
@@ -871,7 +871,7 @@ Treść nadrzędna zostanie **odrzucona**, chyba że szablon komponentu potomneg
 
 Wszystko, co pierwotnie znajdowało się w tagach `<slot>`, jest uważane za **treść zastępczą**. Treść zastępcza jest kompilowana w zasięgu dziecka i będzie wyświetlana tylko wtedy, gdy element gospodarza jest pusty i nie ma w nim treści do wstawienia.
 
-Załóżmy, że mamy komponent `my-component` z poniższym szablonem:
+Załóżmy, że mamy komponent `moj-komponent` z poniższym szablonem:
 
 ``` html
 <div>
@@ -888,10 +888,10 @@ I rodzica korzystającego z komponentu:
 ``` html
 <div>
   <h1>Tytuł rodzica</h1>
-  <my-component>
+  <moj-komponent>
     <p>Oryginalna zawartość</p>
     <p>Więcej oryginalnej zawartości</p>
-  </my-component>
+  </moj-komponent>
 </div>
 ```
 
@@ -1095,7 +1095,7 @@ Więcej informacji o `<keep-alive>` znajdziesz w [dokumentacji API](../api/#keep
 
 ### Wytwarzanie komponentów wielokrotnego użytku
 
-Podczas tworzenia komponentów dobrze jest pamiętać, czy zamierzasz je później wykorzystać gdzieś później. Komponenty jednorazowe mogą być ściśle sprzężone, ale komponenty wielokrotnego użytku powinny definiować czysty interfejs publiczny i nie zakładać żadnych założeń dotyczących kontekstu, w którym są używane
+Podczas tworzenia komponentów dobrze jest pamiętać, czy zamierzasz je później wykorzystać gdzieś później. Komponenty jednorazowe mogą być ściśle sprzężone, ale komponenty wielokrotnego użytku powinny definiować czysty interfejs publiczny i nie zakładać żadnych założeń dotyczących kontekstu, w którym są używane.
 
 Interfejs API komponentu Vue składa się z trzech części - prop, zdarzenia i sloty:
 
@@ -1137,7 +1137,7 @@ var dziecko = rodzic.$refs.profile
 
 Kiedy `ref` jest używane razem z `v-for`, otrzymasz odpowiedź, która będzie tablicą zawierającą komponenty potomne, odzwierciedlające źródło danych.
 
-<p class="tip">`$ refs` są emitowane tylko po wyrenderowaniu komponentu i nie są reaktywne. Jest to jedynie luka ewakuacyjna do bezpośredniej manipulacji dziećmi - powinieneś unikać używania `$ refs` w szablonach lub właściwościach wyliczonych.</p>
+<p class="tip">`$refs` są emitowane tylko po wyrenderowaniu komponentu i nie są reaktywne. Jest to jedynie luka ewakuacyjna do bezpośredniej manipulacji dziećmi - powinieneś unikać używania `$refs` w szablonach lub właściwościach wyliczonych.</p>
 
 ### Komponenty asynchroniczne
 
@@ -1154,7 +1154,7 @@ Vue.component('async-przyklad', function (resolve, reject) {
 })
 ```
 
-Funkcja fabryczna otrzymuje wywołanie zwrotne `resolve`, które powinno zostać wywołane po pobraniu definicji komponentu z serwera. Możesz także zdefiniować `reject(reason)`, aby wskazać, że ładowanie się nie powiodło. `setTimeout` jest użyte tylko przykładowo, sposób pobrania komponentu zależy od Ciebie. Jednym z zalecanych sposobów jest użycie komponentów async razem z [funkcją podziału kodu Webpacka](https://webpack.js.org/guides/code-splitting/):
+Funkcja fabryczna otrzymuje wywołanie zwrotne `resolve`, które powinno zostać wywołane po pobraniu definicji komponentu z serwera. Możesz także zdefiniować `reject(reason)`, aby wskazać, że ładowanie się nie powiodło. `setTimeout` jest użyte tylko przykładowo, sposób pobrania komponentu zależy od Ciebie. Jednym z zalecanych sposobów jest użycie komponentów async razem z [funkcją podziału kodu z Webpacka](https://webpack.js.org/guides/code-splitting/):
 
 ``` js
 Vue.component('async-webpack-przyklad', function (resolve) {
@@ -1185,7 +1185,7 @@ new Vue({
   }
 })
 ```
-<p class = "tip"> Jeśli korzystasz z<strong> Browserify </strong> i chciałbyś użyć komponentów asynchronicznych, nie mam dobrych wieści: jego autor [wyraźnie powiedział](https://github.com/substack/node-browserify/issues/58#issuecomment-21978224), że ładowanie asynchroniczne nigdy nie będzie oficjalnie wspierane przez Browserify. Społeczność Browserify znalazła [kilka obejść] (https://github.com/vuejs/vuejs.org/issues/620), które mogą być pomocne dla już istniejących, rozbudowanych aplikacji. W przypadku wszystkich innych scenariuszy zalecamy używanie pakietu Webpack do wbudowanej obsługi asynchronicznej. </p>
+<p class = "tip"> Jeśli korzystasz z<strong> Browserify </strong> i chciałbyś użyć komponentów asynchronicznych, nie mam dobrych wieści: jego autor [wyraźnie powiedział](https://github.com/substack/node-browserify/issues/58#issuecomment-21978224), że ładowanie asynchroniczne nigdy nie będzie oficjalnie wspierane przez Browserify. Społeczność Browserify znalazła [kilka obejść] (https://github.com/vuejs/vuejs.org/issues/620), które mogą być pomocne dla już istniejących, rozbudowanych aplikacji. W przypadku wszystkich innych scenariuszy zalecamy używanie pakietu Webpack do wbudowanej obsługi asynchronicznej.</p>
 
 ### Zaawansowane komponenty asynchroniczne
 
@@ -1263,7 +1263,7 @@ components: {
 
 To oznacza, że PascalCase jest najbardziej uniwersalną _konwencją deklaracji_ a kebeb-case najbardzoiej uniwersalną _konwencją wywołania_.
 
-Jeżeli Twój komponent nie przyjmuje z użyciem elementów `slot`, możesz nawet użyć znaku zamknięcia tagu `/` po nazwie:
+Jeżeli Twój komponent nie przyjmuje danych z użyciem elementów `slot`, możesz nawet użyć znaku zamknięcia tagu `/` po nazwie:
 
 ``` html
 <my-component/>
@@ -1293,7 +1293,7 @@ Jeśli nie jesteś ostrożny, elementy rekurencyjne mogą również prowadzić d
 name: 'stack-overflow',
 template: '<div><stack-overflow></stack-overflow></div>'
 ```
-Składnik taki jak powyższy spowoduje błąd "max stack size exceeded" (przekroczenia maksymalnego rozmiaru stosu), więc upewnij się, że wywołanie rekurencyjne jest warunkowe (to znaczy używa `v-if`, które ostatecznie będzie `false`).
+Składnik taki jak powyższy, spowoduje błąd "max stack size exceeded" (przekroczenia maksymalnego rozmiaru stosu), więc upewnij się, że wywołanie rekurencyjne jest warunkowe (to znaczy używa `v-if`, które ostatecznie będzie `false`).
 
 ### Kołowe odniesienia między komponentami
 
