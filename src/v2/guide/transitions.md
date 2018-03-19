@@ -1,17 +1,17 @@
 ---
-title: Enter/Leave & List Transitions
+title: Efekty wejścia/wyjścia i lista przejść
 type: guide
 order: 201
 ---
 
-## Overview
+## Przegląd
 
-Vue provides a variety of ways to apply transition effects when items are inserted, updated, or removed from the DOM. This includes tools to:
+Vue oferuje różne sposoby zastosowania efektów przejścia, gdy elementy są wstawiane, aktualizowane lub usuwane z DOM. Obejmuje to narzędzia do:
 
-- automatically apply classes for CSS transitions and animations
-- integrate 3rd-party CSS animation libraries, such as Animate.css
-- use JavaScript to directly manipulate the DOM during transition hooks
-- integrate 3rd-party JavaScript animation libraries, such as Velocity.js
+- automatycznego zastosowania klasy dla przejść i animacji CSS
+- integracja zewnętrznych bibliotek animacji CSS, takich jak Animate.css
+- wykorzystana JavaScript, do bezpośredniej manipulacji DOM podczas przechwytywania przejścia
+- integracji zewnętrznych bibliotek animacji, takich jak Velocity.js
 
 On this page, we'll only cover entering, leaving, and list transitions, but you can see the next section for [managing state transitions](transitioning-state.html).
 
