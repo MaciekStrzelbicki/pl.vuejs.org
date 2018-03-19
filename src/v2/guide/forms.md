@@ -204,7 +204,7 @@ new Vue({
 </script>
 {% endraw %}
 
-<p class="tip">If the initial value of your `v-model` expression does not match any of the options, the `<select>` element will render in an "unselected" state. On iOS this will cause the user not being able to select the first item because iOS does not fire a change event in this case. It is therefore recommended to provide a disabled option with an empty value, as demonstrated in the example above.</p>
+<p class="tip">Jeśli początkowa wartość twojego wyrażenia `v-model` nie pasuje do żadnej z opcji, element `<select>` wyrenderuje się w stanie "niezaznaczonym". W systemie iOS użytkownik nie będzie mógł wybrać pierwszego elementu, ponieważ iOS nie uruchamia w tym przypadku zdarzenia zmiany. Dlatego zaleca się, aby podać opcję wyłączoną z pustą wartością, jak pokazano w powyższym przykładzie.</p>
 
 Wielokrotny wybór (bindowany z tablicą):
 
