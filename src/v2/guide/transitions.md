@@ -29,7 +29,7 @@ Działa następująco:
 ``` html
 <div id="demo">
   <button v-on:click="show = !show">
-    Przełącznik
+    Przełącz
   </button>
   <transition name="fade">
     <p v-if="show">Cześć</p>
@@ -58,7 +58,7 @@ new Vue({
 {% raw %}
 <div id="demo">
   <button v-on:click="show = !show">
-    Przełącznik
+    Przełącz
   </button>
   <transition name="demo-transition">
     <p v-if="show">Cześć</p>
@@ -120,7 +120,7 @@ Jeden z najczęstszych typów przejść wykorzystuje przejścia CSS. Oto przykł
 ``` html
 <div id="example-1">
   <button @click="show = !show">
-    Przełącznik renderowania
+    Przełącz renderowania
   </button>
   <transition name="slide-fade">
     <p v-if="show">cześć</p>
@@ -156,7 +156,7 @@ new Vue({
 {% raw %}
 <div id="example-1" class="demo">
   <button @click="show = !show">
-    Przełącznik renderowania
+    Przełącz renderowania
   </button>
   <transition name="slide-fade">
     <p v-if="show">cześć</p>
@@ -186,13 +186,13 @@ new Vue({
 
 ### Animacje CSS
 
-Animacje CSS są dodawane w ten sam sposób co przejścia CSS, jedyną różnicą jest, że `v-enter` nie jest usuwany natychmiast po wstawieniu elemenu, ale w zdarzeniu `animationend`.
+Animacje CSS są dodawane w ten sam sposób co przejścia CSS, jedyną różnicą jest, że `v-enter` nie jest usuwany natychmiast po wstawieniu elemenu, ale w po zdarzeniu `animationend`.
 
-Here's an example, omitting prefixed CSS rules for the sake of brevity:
+Poniższy przykład pomija prefixowanie css dla czystości przykładu:
 
 ``` html
 <div id="example-2">
-  <button @click="show = !show">Toggle show</button>
+  <button @click="show = !show">Przełącz widoczności</button>
   <transition name="bounce">
     <p v-if="show">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris facilisis enim libero, at lacinia diam fermentum id. Pellentesque habitant morbi tristique senectus et netus.</p>
   </transition>
@@ -230,7 +230,7 @@ new Vue({
 
 {% raw %}
 <div id="example-2" class="demo">
-  <button @click="show = !show">Toggle show</button>
+  <button @click="show = !show">Przełącz widoczności</button>
   <transition name="bounce">
     <p v-show="show">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris facilisis enim libero, at lacinia diam fermentum id. Pellentesque habitant morbi tristique senectus et netus.</p>
   </transition>
@@ -284,9 +284,9 @@ new Vue({
 </script>
 {% endraw %}
 
-### Custom Transition Classes
+### NIestandardowe klasy użytkownika
 
-You can also specify custom transition classes by providing the following attributes:
+Możesz zdefiniować własne klasy przejścia, podając następujące atrybuty:
 
 - `enter-class`
 - `enter-active-class`
@@ -295,23 +295,23 @@ You can also specify custom transition classes by providing the following attrib
 - `leave-active-class`
 - `leave-to-class` (2.1.8+)
 
-These will override the conventional class names. This is especially useful when you want to combine Vue's transition system with an existing CSS animation library, such as [Animate.css](https://daneden.github.io/animate.css/).
+Nadpiszą one nazwy klas. Jest to szczególnie przydatne, gdy chcesz połączyć system przejść Vue z biblioteką animacji CSS, taką jak [Animate.css](https://daneden.github.io/animate.css/).
 
-Here's an example:
+Na przykład:
 
 ``` html
 <link href="https://cdn.jsdelivr.net/npm/animate.css@3.5.1" rel="stylesheet" type="text/css">
 
 <div id="example-3">
   <button @click="show = !show">
-    Toggle render
+    Przełącz wyświetlania
   </button>
   <transition
     name="custom-classes-transition"
     enter-active-class="animated tada"
     leave-active-class="animated bounceOutRight"
   >
-    <p v-if="show">hello</p>
+    <p v-if="show">Cześć</p>
   </transition>
 </div>
 ```
@@ -329,14 +329,14 @@ new Vue({
 <link href="https://cdn.jsdelivr.net/npm/animate.css@3.5.1" rel="stylesheet" type="text/css">
 <div id="example-3" class="demo">
   <button @click="show = !show">
-    Toggle render
+    Przełącz wyświetlania
   </button>
   <transition
     name="custom-classes-transition"
     enter-active-class="animated tada"
     leave-active-class="animated bounceOutRight"
   >
-    <p v-if="show">hello</p>
+    <p v-if="show">Cześć</p>
   </transition>
 </div>
 <script>
@@ -349,33 +349,33 @@ new Vue({
 </script>
 {% endraw %}
 
-### Using Transitions and Animations Together
+### Używanie przejść i animacji jednocześnie
 
-Vue needs to attach event listeners in order to know when a transition has ended. It can either be `transitionend` or `animationend`, depending on the type of CSS rules applied. If you are only using one or the other, Vue can automatically detect the correct type.
+Vue musi dołączyć detektory zdarzeń, aby wiedzieć, kiedy przejście zostało zakończone. Może to być `transitionend` lub `animationend`, w zależności od zastosowanych reguł CSS. Jeśli używasz tylko jednego lub drugiego, Vue może automatycznie wykryć właściwy typ.
 
-However, in some cases you may want to have both on the same element, for example having a CSS animation triggered by Vue, along with a CSS transition effect on hover. In these cases, you will have to explicitly declare the type you want Vue to care about in a `type` attribute, with a value of either `animation` or `transition`.
+Jednak w niektórych przypadkach możesz chcieć użyć przejścia i animacji na tym samym elemencie, na przykład mieć animację CSS wyzwalaną przez Vue, wraz z efektem przejścia CSS po najechaniu myszą. W takich przypadkach będziesz musiał jawnie zadeklarować typ, którym chcesz się zająć w Vue w atrybucie "type", z wartością `animation` lub` transition`.
 
-### Explicit Transition Durations
+### Definica czasu przejścia
 
-> New in 2.2.0+
+> Nowość 2.2.0+
 
-In most cases, Vue can automatically figure out when the transition has finished. By default, Vue waits for the first `transitionend` or `animationend` event on the root transition element. However, this may not always be desired - for example, we may have a choreographed transition sequence where some nested inner elements have a delayed transition or a longer transition duration than the root transition element.
+W większości przypadków Vue może automatycznie dowiedzieć się, kiedy przejście zostało zakończone. Domyślnie Vue czeka na pierwsze zdarzenie `transitionend` lub` animationend` na głównym elemencie przejścia. Jednak nie zawsze może to być pożądane - na przykład możemy mieć sekwencję przejścia z choreografią, w której niektóre zagnieżdżone elementy wewnętrzne mają opóźnione przejście lub dłuższy czas trwania przejścia niż główny element.
 
-In such cases you can specify an explicit transition duration (in milliseconds) using the `duration` prop on the `<transition>` component:
+W takich przypadkach można określić wyraźny czas trwania przejścia (w milisekundach) prop `duration` w komponencie `<transition>`:
 
 ``` html
 <transition :duration="1000">...</transition>
 ```
 
-You can also specify separate values for enter and leave durations:
+Możesz również zdefiniować różne czasy dla wejścia i wyjścia:
 
 ``` html
 <transition :duration="{ enter: 500, leave: 800 }">...</transition>
 ```
 
-### JavaScript Hooks
+### Uchwyty JavaScript
 
-You can also define JavaScript hooks in attributes:
+Możesz również zdefiniować uchwyty JavaScript w atrybutach:
 
 ``` html
 <transition
@@ -397,14 +397,14 @@ You can also define JavaScript hooks in attributes:
 // ...
 methods: {
   // --------
-  // ENTERING
+  // WEJŚCIE
   // --------
 
   beforeEnter: function (el) {
     // ...
   },
-  // the done callback is optional when
-  // used in combination with CSS
+  // wywołanie zwrotne done jest opcjonalne gdy
+  // budujemy efekt bazując na CSS
   enter: function (el, done) {
     // ...
     done()
@@ -417,14 +417,14 @@ methods: {
   },
 
   // --------
-  // LEAVING
+  // WYJŚCIE
   // --------
 
   beforeLeave: function (el) {
     // ...
   },
-  // the done callback is optional when
-  // used in combination with CSS
+  // wywołanie zwrotne done jest opcjonalne gdy
+  // budujemy efekt bazując na CSS
   leave: function (el, done) {
     // ...
     done()
@@ -432,31 +432,31 @@ methods: {
   afterLeave: function (el) {
     // ...
   },
-  // leaveCancelled only available with v-show
+  // leaveCancelled jest dostępne wyłącznie z v-show
   leaveCancelled: function (el) {
     // ...
   }
 }
 ```
 
-These hooks can be used in combination with CSS transitions/animations or on their own.
+Uchwyty mogą być używane w kombiancji z animacjami / przejściamu CSS lub same.
 
-<p class="tip">When using JavaScript-only transitions, **the `done` callbacks are required for the `enter` and `leave` hooks**. Otherwise, the hooks will be called synchronously and the transition will finish immediately.</p>
+<p class="tip">Podczas korzystania z przejść JavaScript-only, **callback `done` jest wymagany dla uchwytów `enter` i `leave`**. W przeciwnym razie uchwyty będą wywoływane synchronicznie, a przejście zakończy się natychmiast.</p>
 
-<p class="tip">It's also a good idea to explicitly add `v-bind:css="false"` for JavaScript-only transitions so that Vue can skip the CSS detection. This also prevents CSS rules from accidentally interfering with the transition.</p>
+<p class="tip">Dobrym pomysłem jest również jawne dodanie `v-bind: css ="false"` dla przejść JavaScript-only, dzięki temu Vue pominie wykrywanie CSS. Zapobiega to również przypadkowemu zakłóceniu przejścia przez reguły CSS.</p>
 
-Now let's dive into an example. Here's a JavaScript transition using Velocity.js:
+Zatem zobaczmy przykład przejścia Javascript bazującego na Velocity.js
 
 ``` html
 <!--
-Velocity works very much like jQuery.animate and is
-a great option for JavaScript animations
+Velocity działa bardzo podobnie do jQuery.animate
+i jest świetnym sposobem na przejścia bazujące na JavaScript
 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script>
 
 <div id="example-4">
   <button @click="show = !show">
-    Toggle
+    Przełącz
   </button>
   <transition
     v-on:before-enter="beforeEnter"
@@ -502,7 +502,7 @@ new Vue({
 {% raw %}
 <div id="example-4" class="demo">
   <button @click="show = !show">
-    Toggle
+    Przełącz
   </button>
   <transition
     v-on:before-enter="beforeEnter"
