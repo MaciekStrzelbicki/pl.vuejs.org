@@ -1,5 +1,5 @@
 ---
-title: Efekty wejścia/wyjścia i lista przejść
+title: Efekty wejścia/wyjścia i efekty dla list
 type: guide
 order: 201
 ---
@@ -13,26 +13,26 @@ Vue oferuje różne sposoby zastosowania efektów przejścia, gdy elementy są w
 - wykorzystana JavaScript, do bezpośredniej manipulacji DOM podczas przechwytywania przejścia
 - integracji zewnętrznych bibliotek animacji, takich jak Velocity.js
 
-On this page, we'll only cover entering, leaving, and list transitions, but you can see the next section for [managing state transitions](transitioning-state.html).
+Na tej stronie omawiamy wyłącznie efekty wejścia, wyjścia oraz efekty dla list, więcej znajdziesz w następnej sekcji [zarządzanie stanem przejścia](transitioning-state.html).
 
-## Transitioning Single Elements/Components
+## Przejście dla pojedyńczego elementu/komponentu
 
-Vue provides a `transition` wrapper component, allowing you to add entering/leaving transitions for any element or component in the following contexts:
+Vue udostępnia komponent owijający `transition`, który pozwala dodawać przejścia wejścia/wyjścia dla dowolnego elementu lub komponentu w następujących kontekstach:
 
-- Conditional rendering (using `v-if`)
-- Conditional display (using `v-show`)
-- Dynamic components
-- Component root nodes
+- renderowanie warunkowe (używając `v-if`)
+- Wyświetlanie warunkowe (za pomocą `v-show`)
+- Dynamiczne komponenty
+- Węzły główne komponentu
 
-This is what an example looks like in action:
+Działa następująco:
 
 ``` html
 <div id="demo">
   <button v-on:click="show = !show">
-    Toggle
+    Przełącznik
   </button>
   <transition name="fade">
-    <p v-if="show">hello</p>
+    <p v-if="show">Cześć</p>
   </transition>
 </div>
 ```
@@ -50,7 +50,7 @@ new Vue({
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+.fade-enter, .fade-leave-to /* .fade-leave-active poniżej wersji 2.1.8 */ {
   opacity: 0
 }
 ```
@@ -58,10 +58,10 @@ new Vue({
 {% raw %}
 <div id="demo">
   <button v-on:click="show = !show">
-    Toggle
+    Przełącznik
   </button>
   <transition name="demo-transition">
-    <p v-if="show">hello</p>
+    <p v-if="show">Cześć</p>
   </transition>
 </div>
 <script>
@@ -82,47 +82,48 @@ new Vue({
 </style>
 {% endraw %}
 
-When an element wrapped in a `transition` component is inserted or removed, this is what happens:
+Jeżeli element jest opakowany w komponent `transition`, jest wstawiany lun usuwany, oto jak się to dzieje:
 
-1. Vue will automatically sniff whether the target element has CSS transitions or animations applied. If it does, CSS transition classes will be added/removed at appropriate timings.
+1. Vue automatycznie wykrywa, czy element docelowy ma zastosowane przejścia lub animacje CSS. Jeśli tak, klasy przejściowe CSS zostaną dodane / usunięte w odpowiednim momencie.
 
-2. If the transition component provided [JavaScript hooks](#JavaScript-Hooks), these hooks will be called at appropriate timings.
+2. jeżeli komponent `transition` dostarczy [uchwyty JavaScript](#JavaScript-Hooks), będą wywołane we właściwym momencie
 
-3. If no CSS transitions/animations are detected and no JavaScript hooks are provided, the DOM operations for insertion and/or removal will be executed immediately on next frame (Note: this is a browser animation frame, different from Vue's concept of `nextTick`).
+3. Jeżeli przejścia / animacje CSS zostaną wykryte, a uchyty JavaScript nie, operacje wstawienia / usunięcia z DOMu zostaną wywołane w następnej klatce (Zauważ: mowa tu o klatkach animacji w przeglądarce, które się różnią od koncepji Vue `nextTick`).
 
-### Transition Classes
+### Klasy przejścia
 
-There are six classes applied for enter/leave transitions.
+Jest sześć klas dodawanych do przejść wejścia / wyjścia.
 
-1. `v-enter`: Starting state for enter. Added before element is inserted, removed one frame after element is inserted.
+1. `v-enter`: Początkowy stan dla wejścia. Dodawana przed wstawieniem elementu, usuwana jedną klatkę po wstawieniu elementu.
 
-2. `v-enter-active`: Active state for enter. Applied during the entire entering phase. Added before element is inserted, removed when transition/animation finishes. This class can be used to define the duration, delay and easing curve for the entering transition.
+2. `v-enter-active`: Stan aktywny dla wejścia. Istnieje podczas całej fazy wejścia. Dodawana przed wstawieniem elementu, usuwana po zakończeniu przejścia / animacji. Tej klasy można użyć do zdefiniowania krzywej czasu trwania, opóźnienia i łagodzenia dla efektu weścia.
 
-3. `v-enter-to`: **Only available in versions 2.1.8+.** Ending state for enter. Added one frame after element is inserted (at the same time `v-enter` is removed), removed when transition/animation finishes.
+3. `v-enter-to`: **Dostępna tylko w wersji 2.1.8+.** Stan końcowy dla wejścia. Dodawany klatkę przed wstawieniem elementu (w tym samym momencie `v-emter` jest usuwany), usuwany po zakończeniu animacji / przejścia.
 
-4. `v-leave`: Starting state for leave. Added immediately when a leaving transition is triggered, removed after one frame.
+4. `v-leave`: Początkowy stan wyjścia. Dodawana natychmiast po uruchomieniu efektu wyjścia, usuwana po jednej klatce.
 
-5. `v-leave-active`: Active state for leave. Applied during the entire leaving phase. Added immediately when leave transition is triggered, removed when the transition/animation finishes. This class can be used to define the duration, delay and easing curve for the leaving transition.
+5. `v-leave-active`: Stan aktywny dla wyjścia. Dodawana zaraz po wejściu w fazę wyjścia, po wyzwoleniu przejścia, usuwana po zakońćzeniu przejścia / animacji.  Applied during the entire leaving phase. Added immediately when leave transition is triggered, removed when the transition/animation finishes. Tej klasy można użyć do zdefiniowania krzywej czasu trwania, opóźnienia i łagodzenia dla efektu weścia.
 
-6. `v-leave-to`: **Only available in versions 2.1.8+.** Ending state for leave. Added one frame after a leaving transition is triggered (at the same time `v-leave` is removed), removed when the transition/animation finishes.
+6. `v-leave-to`: **Dostępna tylko w wersji 2.1.8+.** Końcowy stan dla wyjścia. Dodawana klatkę po uruchomieniu efektu wyjścia (w tym samym momencie usuwana jest `v-leave`), usuwana po zakończeniu przejścia / animacji.
 
 ![Transition Diagram](/images/transition.png)
 
-Each of these classes will be prefixed with the name of the transition. Here the `v-` prefix is the default when you use a `<transition>` element with no name. If you use `<transition name="my-transition">` for example, then the `v-enter` class would instead be `my-transition-enter`.
+Każda z tych klas będzie poprzedzona nazwą przejścia. Prefiks `v-` jest wstawiany jako domyślny dla elementu `<transition>` bez nazwy. Jeżeli np. użyjesz `<transition name="moje-przejscie">`, zamiast klasy `v-enter` uzyskasz klasę `moje-przejście-enter`.
 
-`v-enter-active` and `v-leave-active` give you the ability to specify different easing curves for enter/leave transitions, which you'll see an example of in the following section.
+`v-enter-active` i `v-leave-active` daje możliwość określenia różnych krzywych dynamiki wejścia / wyjścia, co będzie widoczne w prykładach kolejnej sekcji.
 
 ### CSS Transitions
 
-One of the most common transition types uses CSS transitions. Here's an example:
+
+Jeden z najczęstszych typów przejść wykorzystuje przejścia CSS. Oto przykład:
 
 ``` html
 <div id="example-1">
   <button @click="show = !show">
-    Toggle render
+    Przełącznik renderowania
   </button>
   <transition name="slide-fade">
-    <p v-if="show">hello</p>
+    <p v-if="show">cześć</p>
   </transition>
 </div>
 ```
@@ -137,8 +138,8 @@ new Vue({
 ```
 
 ``` css
-/* Enter and leave animations can use different */
-/* durations and timing functions.              */
+/* Animacje wejścia i wyjścia mogą mieć  */
+/* różne czasy trwania */
 .slide-fade-enter-active {
   transition: all .3s ease;
 }
@@ -146,7 +147,7 @@ new Vue({
   transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
 }
 .slide-fade-enter, .slide-fade-leave-to
-/* .slide-fade-leave-active below version 2.1.8 */ {
+/* .slide-fade-leave-active poniżej wersji 2.1.8 */ {
   transform: translateX(10px);
   opacity: 0;
 }
@@ -155,10 +156,10 @@ new Vue({
 {% raw %}
 <div id="example-1" class="demo">
   <button @click="show = !show">
-    Toggle render
+    Przełącznik renderowania
   </button>
   <transition name="slide-fade">
-    <p v-if="show">hello</p>
+    <p v-if="show">cześć</p>
   </transition>
 </div>
 <script>
@@ -183,9 +184,9 @@ new Vue({
 </style>
 {% endraw %}
 
-### CSS Animations
+### Animacje CSS
 
-CSS animations are applied in the same way as CSS transitions, the difference being that `v-enter` is not removed immediately after the element is inserted, but on an `animationend` event.
+Animacje CSS są dodawane w ten sam sposób co przejścia CSS, jedyną różnicą jest, że `v-enter` nie jest usuwany natychmiast po wstawieniu elemenu, ale w zdarzeniu `animationend`.
 
 Here's an example, omitting prefixed CSS rules for the sake of brevity:
 
