@@ -120,7 +120,7 @@ Jeden z najczęstszych typów przejść wykorzystuje przejścia CSS. Oto przykł
 ``` html
 <div id="example-1">
   <button @click="show = !show">
-    Przełącz renderowania
+    Przełącz renderowanie
   </button>
   <transition name="slide-fade">
     <p v-if="show">cześć</p>
@@ -156,7 +156,7 @@ new Vue({
 {% raw %}
 <div id="example-1" class="demo">
   <button @click="show = !show">
-    Przełącz renderowania
+    Przełącz renderowanie
   </button>
   <transition name="slide-fade">
     <p v-if="show">cześć</p>
@@ -192,7 +192,7 @@ Poniższy przykład pomija prefixowanie css dla czystości przykładu:
 
 ``` html
 <div id="example-2">
-  <button @click="show = !show">Przełącz widoczności</button>
+  <button @click="show = !show">Przełącz widoczność</button>
   <transition name="bounce">
     <p v-if="show">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris facilisis enim libero, at lacinia diam fermentum id. Pellentesque habitant morbi tristique senectus et netus.</p>
   </transition>
@@ -230,7 +230,7 @@ new Vue({
 
 {% raw %}
 <div id="example-2" class="demo">
-  <button @click="show = !show">Przełącz widoczności</button>
+  <button @click="show = !show">Przełącz widoczność</button>
   <transition name="bounce">
     <p v-show="show">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris facilisis enim libero, at lacinia diam fermentum id. Pellentesque habitant morbi tristique senectus et netus.</p>
   </transition>
@@ -304,7 +304,7 @@ Na przykład:
 
 <div id="example-3">
   <button @click="show = !show">
-    Przełącz wyświetlania
+    Przełącz wyświetlanie
   </button>
   <transition
     name="custom-classes-transition"
@@ -329,7 +329,7 @@ new Vue({
 <link href="https://cdn.jsdelivr.net/npm/animate.css@3.5.1" rel="stylesheet" type="text/css">
 <div id="example-3" class="demo">
   <button @click="show = !show">
-    Przełącz wyświetlania
+    Przełącz wyświetlanie
   </button>
   <transition
     name="custom-classes-transition"
@@ -545,9 +545,9 @@ new Vue({
 </script>
 {% endraw %}
 
-## Transitions on Initial Render
+## Przejścia na początku renderowania
 
-If you also want to apply a transition on the initial render of a node, you can add the `appear` attribute:
+Aby zastosować przejście do początkowego renderowania węzła, dodaj atrybut `appear`:
 
 ``` html
 <transition appear>
@@ -555,7 +555,7 @@ If you also want to apply a transition on the initial render of a node, you can 
 </transition>
 ```
 
-By default, this will use the transitions specified for entering and leaving. If you'd like however, you can also specify custom CSS classes:
+Domyślnie będą używane przejścia dla wejścia i wyjścia. Jeśli chcesz, możesz także określić własne klasy CSS:
 
 ``` html
 <transition
@@ -568,7 +568,7 @@ By default, this will use the transitions specified for entering and leaving. If
 </transition>
 ```
 
-and custom JavaScript hooks:
+oraz własne uchyty JavaScript:
 
 ``` html
 <transition
@@ -582,63 +582,63 @@ and custom JavaScript hooks:
 </transition>
 ```
 
-## Transitioning Between Elements
+## Przejścia pomiędzy elementami
 
-We discuss [transitioning between components](#Transitioning-Between-Components) later, but you can also transition between raw elements using `v-if`/`v-else`. One of the most common two-element transitions is between a list container and a message describing an empty list:
+[Przejścia pomiędzy komponentami](#Transitioning-Between-Components) omówimy później, możesz również dodawać przejścia pomiędzy surowymi elementami korzystając z `v-if`/`v-else`. Jednym z najczęściej wykorzystywanych przejść jest to pomiędzy kontenerem zawierającym listę, a wiadomością opisującą pustą listę:
 
 ``` html
 <transition>
   <table v-if="items.length > 0">
     <!-- ... -->
   </table>
-  <p v-else>Sorry, no items found.</p>
+  <p v-else>Niestety, nic nie znaleziono</p>
 </transition>
 ```
 
-This works well, but there's one caveat to be aware of:
+To działa dobrze, ale o jednym należy pamiętać:
 
-<p class="tip">When toggling between elements that have **the same tag name**, you must tell Vue that they are distinct elements by giving them unique `key` attributes. Otherwise, Vue's compiler will only replace the content of the element for efficiency. Even when technically unnecessary though, **it's considered good practice to always key multiple items within a `<transition>` component.**</p>
+<p class="tip">Podczas przełączania między elementami, które mają **tę samą nazwę znacznika**, musisz powiedzieć Vue, że są one odrębnymi elementami, nadając im unikalne atrybuty . W przeciwnym razie kompilator Vue, w celu zwiększenia wydajności, zastąpi tylko zawartość elementu. Nawet jeśli jest to technicznie niepotrzebne, **uważamy, że dobrą praktyką jest zawsze kluczowanie wielu elementów w komponencie `<transition>`. **</p>
 
 For example:
 
 ``` html
 <transition>
   <button v-if="isEditing" key="save">
-    Save
+    Zapisz
   </button>
   <button v-else key="edit">
-    Edit
+    Edytuj
   </button>
 </transition>
 ```
 
-In these cases, you can also use the `key` attribute to transition between different states of the same element. Instead of using `v-if` and `v-else`, the above example could be rewritten as:
+W takich przypadkach można również użyć atrybutu `key` do przejścia między różnymi stanami tego samego elementu. Zamiast używać `v-if` i `v-else`, powyższy przykład może być przepisany jako:
 
 ``` html
 <transition>
   <button v-bind:key="isEditing">
-    {{ isEditing ? 'Save' : 'Edit' }}
+    {{ isEditing ? 'Zapisz' : 'Edytuj' }}
   </button>
 </transition>
 ```
 
-It's actually possible to transition between any number of elements, either by using multiple `v-if`s or binding a single element to a dynamic property. For example:
+W rzeczywistości możliwe jest przejście między dowolną liczbą elementów, przez użycie wielu `v-if`s lub powiązanie pojedynczego elementu z właściwością dynamiczną. Na przykład:
 
 ``` html
 <transition>
   <button v-if="docState === 'saved'" key="saved">
-    Edit
+    Edytuj
   </button>
   <button v-if="docState === 'edited'" key="edited">
-    Save
+    Zapisz
   </button>
   <button v-if="docState === 'editing'" key="editing">
-    Cancel
+    Anuluj
   </button>
 </transition>
 ```
 
-Which could also be written as:
+Które można również napisać jako:
 
 ``` html
 <transition>
@@ -661,9 +661,9 @@ computed: {
 }
 ```
 
-### Transition Modes
+### Tryby przejścia
 
-There's still one problem though. Try clicking the button below:
+Wciąż jest jeden problem. Spróbuj kliknąć poniższy przycisk:
 
 {% raw %}
 <div id="no-mode-demo" class="demo">
